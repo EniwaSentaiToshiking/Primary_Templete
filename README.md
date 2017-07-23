@@ -1,0 +1,2 @@
+# Primary_Templete
+プライマリークラステンプレート
