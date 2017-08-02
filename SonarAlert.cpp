@@ -1,19 +1,22 @@
 #include "SonarAlert.h"
 
-SonarAlert::SonarAlert(SonarSensor* sonarSensor){
-  mSonarSensor = sonarSensor;
-  distance = 35;
+SonarAlert::SonarAlert(SonarSensor *sonarSensor)
+{
+    mSonarSensor = sonarSensor;
+    distance = 35;
 }
 
-SonarAlert::~SonarAlert() {
+SonarAlert::~SonarAlert()
+{
 }
 
-bool SonarAlert::alert(void){
+bool SonarAlert::alert(void)
+{
 
-  static uint32_t counter = 0;
-  static bool alert = false;
+    static uint32_t counter = 0;
+    static bool alert = false;
 
-    if (++counter == 40/4) /* 約40msec周期毎に障害物検知  */
+    if (++counter == 40 / 4) /* 約40msec周期毎に障害物検知  */
     {
         /*
          * 超音波センサによる距離測定周期は、超音波の減衰特性に依存します。

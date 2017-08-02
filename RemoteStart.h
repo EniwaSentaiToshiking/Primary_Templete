@@ -1,20 +1,20 @@
-	#ifndef REMOTESTART_H
-	#define REMOTESTART_H
+#ifndef REMOTESTART_H
+#define REMOTESTART_H
 
-	#include "ev3api.h"
-	#include <stdio.h>
+#include "ev3api.h"
+#include <stdio.h>
 
-	class RemoteStart {
+class RemoteStart
+{
 
-	private:
+  private:
+	uint8_t CMD_START;
+	FILE *bt;
 
-	 uint8_t CMD_START;
-	FILE* bt;
+  public:
+	RemoteStart();
+	bool remote_start();
+	virtual ~RemoteStart();
+};
 
-	public:
-		RemoteStart();
-		bool remote_start();
-virtual ~RemoteStart();
-	};
-
-	#endif
+#endif

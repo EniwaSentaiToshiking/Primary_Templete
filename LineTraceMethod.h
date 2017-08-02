@@ -9,27 +9,26 @@
 #include "Calibration.h"
 #include "SonarAlert.h"
 
-
 using namespace ev3api;
 
-class LineTraceMethod {
+class LineTraceMethod
+{
 
-private:
-	ColorSensor* mColorSensor;
-	PID* mPID;
-	BalancingWalker* mBalancingWalker;
-	Calibration* mCalibration;
+  private:
+	ColorSensor *mColorSensor;
+	PID *mPID;
+	BalancingWalker *mBalancingWalker;
+	Calibration *mCalibration;
 
 	bool mIsInitialized;
 
-	SonarAlert* mSonarAlert;
+	SonarAlert *mSonarAlert;
 
-public:
-	LineTraceMethod(ColorSensor* colorSensor,PID* pID,BalancingWalker* balancingWalker,Calibration* calibration,SonarAlert* sonarAlert);
+  public:
+	LineTraceMethod(ColorSensor *colorSensor, PID *pID, BalancingWalker *balancingWalker, Calibration *calibration, SonarAlert *sonarAlert);
 	bool sonarFlag;
- void run(float p,float i,float d,int forward,int mix,int max,int offset);
+	void run(float p, float i, float d, int forward, int mix, int max, int offset);
 	void SCENARIO_run();
-
 
 	virtual ~LineTraceMethod();
 };

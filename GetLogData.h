@@ -5,16 +5,17 @@
 #include <stdio.h>
 #include "Measure.h"
 
-class GetLogData {
-private:
-FILE *gyrofile;      /*logging gyrosensor*/
-FILE *colorfile;     /*logging colorsensor*/
-FILE *point_x; //座標データ
-FILE *point_y;
+class GetLogData
+{
+  private:
+	FILE *gyrofile;  /*logging gyrosensor*/
+	FILE *colorfile; /*logging colorsensor*/
+	FILE *point_x;   //座標データ
+	FILE *point_y;
 
-public:
+  public:
 	GetLogData();
-	void create_logFile(int16_t gyro,int8_t color,Measure* mea);
+	void create_logFile(int16_t gyro, int8_t color, Measure *mea);
 
 	virtual ~GetLogData();
 };

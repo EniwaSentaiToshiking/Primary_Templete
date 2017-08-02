@@ -1,8 +1,9 @@
 #include "Stairs.h"
 
-Stairs::Stairs(const GyroSensor* gyroSensor, Motor* leftMotor,
-	Motor* rightMotor, TailControl* tailControl,
-	Clock* clock,BalancingWalker* balancingWalker, LineTraceMethod* lineTraceMethod){
+Stairs::Stairs(const GyroSensor *gyroSensor, Motor *leftMotor,
+			   Motor *rightMotor, TailControl *tailControl,
+			   Clock *clock, BalancingWalker *balancingWalker, LineTraceMethod *lineTraceMethod)
+{
 
 	mGyroSensor = gyroSensor;
 	mRightMotor = rightMotor;
@@ -16,32 +17,31 @@ Stairs::Stairs(const GyroSensor* gyroSensor, Motor* leftMotor,
 
 Stairs::~Stairs() {}
 
-void Stairs::run(){
+void Stairs::run()
+{
 
 	mClock->reset();
 
-	while(stairsFlag != -1){
-		switch(stairsFlag){
-			case 0:
+	while (stairsFlag != -1)
+	{
+		switch (stairsFlag)
+		{
+		case 0:
 
-			mLineTraceMethod->run(0.0, 0.0, 0.0,-10,-10,10,2);
+			mLineTraceMethod->run(0.0, 0.0, 0.0, -10, -10, 10, 2);
 
-			if(mClock->now() >= 1000){
+			if (mClock->now() >= 1000)
+			{
 				stairsFlag = 1;
 			}
 
 			break;
 
-			case 1:
-
+		case 1:
 
 			break;
 
-
-
-			case 2:
-
-
+		case 2:
 
 			mClock->wait(2000);
 
@@ -49,11 +49,11 @@ void Stairs::run(){
 
 			break;
 
-case 3:
+		case 3:
 
-break;
+			break;
 
-			default:
+		default:
 			stairsFlag = -1;
 			break;
 		}

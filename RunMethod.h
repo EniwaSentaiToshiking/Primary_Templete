@@ -20,47 +20,48 @@
 
 using namespace ev3api;
 
-class RunMethod {
+class RunMethod
+{
 
-private:
+  private:
+    enum State
+    {
+        UNDEFINED,         //未定義
+        WAITING_FOR_START, //スタート待ち
+        LINE_TRACE,        //走行中
+        // LINE_TRACE2,   //走行中
+        // LINE_TRACE3,   //走行中
+        // LINE_TRACE4,   //走行中
+        // LINE_TRACE5,   //走行中
+        // LINE_TRACE6,   //走行中
+        SCENARIO_TRACE //難所
+    };
 
-enum State {
-UNDEFINED,  //未定義
-WAITING_FOR_START, //スタート待ち
-LINE_TRACE,   //走行中
-// LINE_TRACE2,   //走行中
-// LINE_TRACE3,   //走行中
-// LINE_TRACE4,   //走行中
-// LINE_TRACE5,   //走行中
-// LINE_TRACE6,   //走行中
-SCENARIO_TRACE //難所
-};
+    int tail;
+    bool tail_flag;
+    int Line_Trace_flag;
+    int SCENARIO_flag;
 
-int tail;
-bool tail_flag;
-int Line_Trace_flag;
-int SCENARIO_flag;
+    RemoteStart *mRemoteStart;
+    Calibration *mCalibration;
+    LineTraceMethod *mLineTraceMethod;
+    TailControl *mTailControl;
+    Clock *mClock;
+    State mState;
+    TouchSensor *mTouchSensor;
+    GyroSensor *mGyroSensor;
+    LookupMethod *mLookupMethod;
+    Stairs *mStairs;
 
-RemoteStart* mRemoteStart;
-Calibration* mCalibration;
-LineTraceMethod* mLineTraceMethod;
-TailControl* mTailControl;
-Clock* mClock;
-State mState;
-TouchSensor* mTouchSensor;
-GyroSensor* mGyroSensor;
-LookupMethod* mLookupMethod;
-Stairs* mStairs;
+    SonarAlert *mSonarAlert;
 
-SonarAlert* mSonarAlert;
+    Garage *gar;
+    gray_check *g_check1;
+    Measure *mea1;
 
-Garage* gar;
-gray_check* g_check1;
-Measure* mea1;
-    
     FILE *timefile;
 
-void execUndefined();
+    void execUndefined();
     void execWaitingForStart();
     void execLineTracing();
     void execLineTracing2();
@@ -70,16 +71,15 @@ void execUndefined();
     void execLineTracing6();
     void execScenarioTracing();
 
-public:
-	RunMethod(GyroSensor* gyroSensor,LineTraceMethod* lineTraceMethod,
-		RemoteStart* remoteStart,
-		Calibration* calibration,TailControl* tailControl,
-		Clock* clock,TouchSensor* touchSensor,
-		LookupMethod* lookupMethod,Stairs* stairs,Garage* g,SonarAlert* sonarAlert, gray_check* g_check2, Measure* mea2);
-	void run();
+  public:
+    RunMethod(GyroSensor *gyroSensor, LineTraceMethod *lineTraceMethod,
+              RemoteStart *remoteStart,
+              Calibration *calibration, TailControl *tailControl,
+              Clock *clock, TouchSensor *touchSensor,
+              LookupMethod *lookupMethod, Stairs *stairs, Garage *g, SonarAlert *sonarAlert, gray_check *g_check2, Measure *mea2);
+    void run();
 
-	virtual ~RunMethod();
-
+    virtual ~RunMethod();
 };
 
 #endif
