@@ -2,6 +2,7 @@ APPL_COBJS +=
 
 APPL_CXXOBJS += \
 RunManager.o \
+TailController.o \
 
 SRCLANG := c++
 

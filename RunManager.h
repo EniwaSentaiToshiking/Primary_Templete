@@ -3,6 +3,7 @@
 
 #include "ev3api.h"
 #include "Clock.h"
+#include "TailController.h"
 
 using namespace ev3api;
 
@@ -21,6 +22,7 @@ class RunManager
     State run_state;
 
     Clock *clock;
+    TailController *tailController;
 
     void execUndefined();
     void execWaitingForStart();

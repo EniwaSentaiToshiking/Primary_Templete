@@ -3,6 +3,7 @@
 RunManager::RunManager()
 {
     clock = new Clock();
+    tailController = new TailController();
     run_state = UNDEFINED;
 }
 
@@ -38,6 +39,7 @@ void RunManager::run()
  **/
 void RunManager::execUndefined()
 {
+    tailController->rotate(90, 80, true);
     clock->sleep(10);
 }
 
