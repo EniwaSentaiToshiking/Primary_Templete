@@ -1,6 +1,7 @@
-APPL_COBJS += 
+APPL_COBJS +=
 
 APPL_CXXOBJS += \
+RunManager.o \
 
 SRCLANG := c++
 

@@ -13,8 +13,13 @@
 #define _debug(x)
 #endif
 
+#include "RunManager.h"
+
+static RunManager *runManager;
+
 static void system_init()
 {
+	runManager = new RunManager();
 	ev3_led_set_color(LED_ORANGE);
 }
 
@@ -37,7 +42,7 @@ void main_task(intptr_t unused)
 	{
 		if (ev3_button_is_pressed(BACK_BUTTON))
 			break;
-
+		runManager->run();
 		tslp_tsk(4);
 	}
 
