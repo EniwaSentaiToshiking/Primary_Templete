@@ -3,6 +3,7 @@ APPL_COBJS +=
 APPL_CXXOBJS += \
 RunManager.o \
 TailController.o \
+SonarAlert.o \
 
 SRCLANG := c++
 
