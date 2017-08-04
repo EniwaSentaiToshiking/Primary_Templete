@@ -1,9 +1,11 @@
-APPL_COBJS +=
+APPL_COBJS += balancer.o balancer_param.o
 
 APPL_CXXOBJS += \
 RunManager.o \
 TailController.o \
 SonarAlert.o \
+BalancerCpp.o \
+BalancingWalker.o \
 
 SRCLANG := c++
 

@@ -4,6 +4,8 @@
 #include "ev3api.h"
 #include "Clock.h"
 #include "TailController.h"
+#include "BalancingWalker.h"
+#include "TouchSensor.h"
 
 using namespace ev3api;
 
@@ -23,6 +25,9 @@ class RunManager
 
     Clock *clock;
     TailController *tailController;
+    BalancingWalker *balancingWalker;
+
+    TouchSensor *touchSensor;
 
     void execUndefined();
     void execWaitingForStart();
