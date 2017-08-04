@@ -6,6 +6,7 @@ TailController.o \
 SonarAlert.o \
 BalancerCpp.o \
 BalancingWalker.o \
+CourceMonitor.o \
 
 SRCLANG := c++
 
