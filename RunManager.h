@@ -5,6 +5,8 @@
 #include "Clock.h"
 #include "TailController.h"
 #include "BalancingWalker.h"
+#include "CourceMonitor.h"
+#include "PID.h"
 #include "TouchSensor.h"
 
 using namespace ev3api;
@@ -12,33 +14,35 @@ using namespace ev3api;
 class RunManager
 {
 
-  private:
-    enum State
-    {
-        UNDEFINED,         //未定義
-        WAITING_FOR_START, //スタート待ち
-        LINE_TRACE,        //走行中
-        SCENARIO_TRACE     //難所
-    };
+private:
+  enum State
+  {
+    UNDEFINED,         //未定義
+    WAITING_FOR_START, //スタート待ち
+    LINE_TRACE,        //走行中
+    SCENARIO_TRACE     //難所
+  };
 
-    State run_state;
+  State run_state;
 
-    Clock *clock;
-    TailController *tailController;
-    BalancingWalker *balancingWalker;
+  Clock *clock;
+  TailController *tailController;
+  BalancingWalker *balancingWalker;
+  CourceMonitor *courceMonitor;
+  PID *pid;
 
-    TouchSensor *touchSensor;
+  TouchSensor *touchSensor;
 
-    void execUndefined();
-    void execWaitingForStart();
-    void execLineTracing();
-    void execScenarioTracing();
+  void execUndefined();
+  void execWaitingForStart();
+  void execLineTracing();
+  void execScenarioTracing();
 
-  public:
-    RunManager();
-    void run();
+public:
+  RunManager();
+  void run();
 
-    virtual ~RunManager();
+  virtual ~RunManager();
 };
 
 #endif

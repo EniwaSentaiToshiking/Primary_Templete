@@ -6,6 +6,8 @@ RunManager::RunManager()
     tailController = new TailController();
     balancingWalker = new BalancingWalker();
     touchSensor = new TouchSensor(PORT_1);
+    courceMonitor = new CourceMonitor();
+    pid = new PID();
     run_state = UNDEFINED;
 }
 
@@ -15,23 +17,24 @@ RunManager::~RunManager()
 
 void RunManager::run()
 {
-    switch(run_state){
-        case UNDEFINED:
-            execUndefined();
+    switch (run_state)
+    {
+    case UNDEFINED:
+        execUndefined();
         break;
 
-        case WAITING_FOR_START:
-            execWaitingForStart();
+    case WAITING_FOR_START:
+        execWaitingForStart();
         break;
 
-        case LINE_TRACE:
-            execLineTracing();
+    case LINE_TRACE:
+        execLineTracing();
         break;
 
-        case SCENARIO_TRACE:
-            execScenarioTracing();
+    case SCENARIO_TRACE:
+        execScenarioTracing();
         break;
-        default:
+    default:
         break;
     }
 }
@@ -42,7 +45,8 @@ void RunManager::run()
 void RunManager::execUndefined()
 {
     tailController->rotate(93, 80, true);
-    if(touchSensor->isPressed()) run_state = WAITING_FOR_START;
+    if (touchSensor->isPressed())
+        run_state = WAITING_FOR_START;
     clock->sleep(10);
 }
 
@@ -52,7 +56,8 @@ void RunManager::execUndefined()
 void RunManager::execWaitingForStart()
 {
     tailController->rotate(93, 80, true);
-    if(touchSensor->isPressed()) run_state = LINE_TRACE;
+    if (touchSensor->isPressed())
+        run_state = LINE_TRACE;
     clock->sleep(10);
 }
 
@@ -62,7 +67,12 @@ void RunManager::execWaitingForStart()
 void RunManager::execLineTracing()
 {
     tailController->rotate(0, 80, false);
-    balancingWalker->setCommand(30,0,0);
+
+    int speed = 30;
+
+    int turn = pid->getTurn(0.38, 0.0, 0.01, courceMonitor->getCurrentColor(), courceMonitor->getTargetColor(), speed * -1, speed);
+
+    balancingWalker->setCommand(speed, turn, 0);
     balancingWalker->run();
 }
 

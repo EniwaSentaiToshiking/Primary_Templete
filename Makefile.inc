@@ -7,6 +7,7 @@ SonarAlert.o \
 BalancerCpp.o \
 BalancingWalker.o \
 CourceMonitor.o \
+PID.o \
 
 SRCLANG := c++
 
