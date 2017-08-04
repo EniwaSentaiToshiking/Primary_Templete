@@ -7,7 +7,7 @@
 #include "BalancingWalker.h"
 #include "CourceMonitor.h"
 #include "PID.h"
-#include "TouchSensor.h"
+#include "TouchController.h"
 
 using namespace ev3api;
 
@@ -31,7 +31,7 @@ private:
   CourceMonitor *courceMonitor;
   PID *pid;
 
-  TouchSensor *touchSensor;
+  TouchController *touchController;
 
   void execUndefined();
   void execWaitingForStart();

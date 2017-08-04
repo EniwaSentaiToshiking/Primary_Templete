@@ -8,6 +8,7 @@ BalancerCpp.o \
 BalancingWalker.o \
 CourceMonitor.o \
 PID.o \
+TouchController.o \
 
 SRCLANG := c++
 

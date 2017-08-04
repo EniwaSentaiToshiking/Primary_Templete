@@ -5,7 +5,7 @@ RunManager::RunManager()
     clock = new Clock();
     tailController = new TailController();
     balancingWalker = new BalancingWalker();
-    touchSensor = new TouchSensor(PORT_1);
+    touchController = new TouchController();
     courceMonitor = new CourceMonitor();
     pid = new PID();
     run_state = UNDEFINED;
@@ -45,7 +45,7 @@ void RunManager::run()
 void RunManager::execUndefined()
 {
     tailController->rotate(93, 80, true);
-    if (touchSensor->isPressed())
+    if (touchController->isPressed())
         run_state = WAITING_FOR_START;
     clock->sleep(10);
 }
@@ -56,7 +56,7 @@ void RunManager::execUndefined()
 void RunManager::execWaitingForStart()
 {
     tailController->rotate(93, 80, true);
-    if (touchSensor->isPressed())
+    if (touchController->isPressed())
         run_state = LINE_TRACE;
     clock->sleep(10);
 }
