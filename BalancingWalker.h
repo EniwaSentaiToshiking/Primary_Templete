@@ -9,9 +9,6 @@ using namespace ev3api;
 
 class BalancingWalker {
 public:
-    static const int LOW;
-    static const int NORMAL;
-    static const int HIGH;
 
     BalancingWalker();
     virtual ~BalancingWalker();
