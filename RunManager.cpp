@@ -9,6 +9,7 @@ RunManager::RunManager()
     courceMonitor = new CourceMonitor();
     pidController = new PIDController();
     btTask = new BTTask();
+    lotManager = new LotManager();
     run_state = UNDEFINED;
 }
 
@@ -68,9 +69,12 @@ void RunManager::execLineTracing()
 {
     tailController->rotate(0, 80, false);
 
-    int speed = 30;
+    int current_color = courceMonitor->getCurrentColor();
+    int target_color = courceMonitor->getTargetColor();
+    int speed = lotManager->getCurrentLotSpeed();
+    PID *pid = lotManager->getCurrentLotPID();
 
-    int turn = pidController->getTurn(0.38, 0.0, 0.01, courceMonitor->getCurrentColor(), courceMonitor->getTargetColor(), speed * -1, speed);
+    int turn = pidController->getTurn(pid, current_color, target_color, speed * -1, speed);
 
     balancingWalker->setCommand(speed, turn, 0);
     balancingWalker->run();

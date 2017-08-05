@@ -8,14 +8,14 @@ PIDController::~PIDController()
 {
 }
 
-int PIDController::getTurn(float p_value, float i_value, float d_value, unsigned int sensor_val, unsigned int target_val, int min, int max)
+int PIDController::getTurn(PID *pid, unsigned int sensor_val, unsigned int target_val, int min, int max)
 {
   int p, i, d;
   float KP, KI, KD;
 
-  KP = p_value;
-  KI = i_value;
-  KD = d_value;
+  KP = pid->p;
+  KI = pid->i;
+  KD = pid->d;
 
   diff[0] = diff[1];
   diff[1] = sensor_val - target_val;

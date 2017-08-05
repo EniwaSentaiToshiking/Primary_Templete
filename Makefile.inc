@@ -10,6 +10,9 @@ CourceMonitor.o \
 PIDController.o \
 TouchController.o \
 BTTask.o \
+LotManager.o \
+Lot.o \
+PID.o \
 
 SRCLANG := c++
 

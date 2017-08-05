@@ -9,6 +9,7 @@
 #include "PIDController.h"
 #include "TouchController.h"
 #include "BTTask.h"
+#include "LotManager.h"
 
 using namespace ev3api;
 
@@ -32,6 +33,7 @@ private:
   CourceMonitor *courceMonitor;
   PIDController *pidController;
   BTTask *btTask;
+  LotManager *lotManager;
 
   TouchController *touchController;
 
