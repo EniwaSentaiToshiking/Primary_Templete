@@ -69,12 +69,24 @@ void RunManager::execLineTracing()
 {
     tailController->rotate(0, 80, false);
 
+    if (lotManager->isChangeCurrentLot())
+        lotManager->changeCurrentLot();
+
     int current_color = courceMonitor->getCurrentColor();
     int target_color = courceMonitor->getTargetColor();
     int speed = lotManager->getCurrentLotSpeed();
     PID *pid = lotManager->getCurrentLotPID();
 
-    int turn = pidController->getTurn(pid, current_color, target_color, speed * -1, speed);
+    int turn = 0;
+
+    if (speed >= 0)
+    {
+        turn = pidController->getTurn(pid, current_color, target_color, speed * -1, speed);
+    }
+    else
+    {
+        turn = pidController->getTurn(pid, current_color, target_color, speed, speed * -1);
+    }
 
     balancingWalker->setCommand(speed, turn, 0);
     balancingWalker->run();

@@ -2,6 +2,7 @@
 #define LOTMANAGER_H
 
 #include "Lot.h"
+#include "Measure.h"
 #include "ev3api.h"
 
 class LotManager
@@ -10,6 +11,7 @@ class LotManager
   private:
     int current_lot;
     Lot *lot_list[2];
+    Measure *mea;
 
   public:
     LotManager();
@@ -19,6 +21,7 @@ class LotManager
     int getCurrentLotSpeed();
     PID *getCurrentLotPID();
     void changeCurrentLot();
+    bool isChangeCurrentLot();
 };
 
 #endif

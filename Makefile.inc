@@ -13,6 +13,7 @@ BTTask.o \
 LotManager.o \
 Lot.o \
 PID.o \
+Measure.o \
 
 SRCLANG := c++
 

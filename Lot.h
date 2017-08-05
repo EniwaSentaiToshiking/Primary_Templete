@@ -5,13 +5,14 @@
 
 class Lot
 {
-  public:
-    int x, y;
-    int speed;
-    PID *pid;
+public:
+  float x0, y0;
+  float x1, y1;
+  int speed;
+  PID *pid;
 
-    Lot(int x, int y, int speed, float p, float i, float d);
-    virtual ~Lot();
+  Lot(float x0, float x1, float y0, float y1, int speed, float p, float i, float d);
+  virtual ~Lot();
 };
 
 #endif
