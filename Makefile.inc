@@ -14,6 +14,7 @@ LotManager.o \
 Lot.o \
 PID.o \
 Measure.o \
+UI.o \
 
 SRCLANG := c++
 

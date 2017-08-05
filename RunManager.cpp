@@ -10,6 +10,7 @@ RunManager::RunManager()
     pidController = new PIDController();
     btTask = new BTTask();
     lotManager = new LotManager();
+    ui = new UI();
     run_state = UNDEFINED;
 }
 

@@ -10,6 +10,7 @@
 #include "TouchController.h"
 #include "BTTask.h"
 #include "LotManager.h"
+#include "UI.h"
 
 using namespace ev3api;
 
@@ -34,6 +35,7 @@ private:
   PIDController *pidController;
   BTTask *btTask;
   LotManager *lotManager;
+  UI *ui;
 
   TouchController *touchController;
 
