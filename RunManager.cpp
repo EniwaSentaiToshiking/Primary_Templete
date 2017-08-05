@@ -46,9 +46,8 @@ void RunManager::run()
 void RunManager::execUndefined()
 {
     tailController->rotate(93, 80, true);
-    if (touchController->isPressed())
-        run_state = WAITING_FOR_START;
-    clock->sleep(10);
+    calibration();
+    run_state = WAITING_FOR_START;
 }
 
 /**
@@ -82,4 +81,35 @@ void RunManager::execLineTracing()
  */
 void RunManager::execScenarioTracing()
 {
+}
+
+void RunManager::calibration()
+{
+    int count = 0;
+    while (count < 3)
+    {
+        if (touchController->isPressed())
+        {
+            ev3_speaker_play_tone(880, 100);
+
+            switch (count)
+            {
+            case 0:
+                courceMonitor->setColor('b');
+                break;
+            case 1:
+                courceMonitor->setColor('w');
+                break;
+
+            case 2:
+                courceMonitor->setColor('g');
+                break;
+            }
+            count++;
+        }
+
+        clock->sleep(10);
+    }
+
+    courceMonitor->setTargetColor();
 }

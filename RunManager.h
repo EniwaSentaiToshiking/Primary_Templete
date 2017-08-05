@@ -39,6 +39,7 @@ private:
   void execWaitingForStart();
   void execLineTracing();
   void execScenarioTracing();
+  void calibration();
 
 public:
   RunManager();
