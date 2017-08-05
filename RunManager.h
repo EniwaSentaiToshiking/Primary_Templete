@@ -8,6 +8,7 @@
 #include "CourceMonitor.h"
 #include "PID.h"
 #include "TouchController.h"
+#include "BTTask.h"
 
 using namespace ev3api;
 
@@ -30,6 +31,7 @@ private:
   BalancingWalker *balancingWalker;
   CourceMonitor *courceMonitor;
   PID *pid;
+  BTTask *btTask;
 
   TouchController *touchController;
 

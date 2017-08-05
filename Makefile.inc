@@ -9,6 +9,7 @@ BalancingWalker.o \
 CourceMonitor.o \
 PID.o \
 TouchController.o \
+BTTask.o \
 
 SRCLANG := c++
 

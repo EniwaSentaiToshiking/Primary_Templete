@@ -8,6 +8,7 @@ RunManager::RunManager()
     touchController = new TouchController();
     courceMonitor = new CourceMonitor();
     pid = new PID();
+    btTask = new BTTask();
     run_state = UNDEFINED;
 }
 
@@ -56,7 +57,7 @@ void RunManager::execUndefined()
 void RunManager::execWaitingForStart()
 {
     tailController->rotate(93, 80, true);
-    if (touchController->isPressed())
+    if (touchController->isPressed() || btTask->isStart())
         run_state = LINE_TRACE;
     clock->sleep(10);
 }
