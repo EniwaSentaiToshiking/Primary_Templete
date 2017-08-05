@@ -11,6 +11,7 @@
 #include "BTTask.h"
 #include "LotManager.h"
 #include "UI.h"
+#include "Logger.h"
 
 using namespace ev3api;
 
@@ -36,6 +37,7 @@ private:
   BTTask *btTask;
   LotManager *lotManager;
   UI *ui;
+  Logger *color_logger;
 
   TouchController *touchController;
 

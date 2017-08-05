@@ -11,6 +11,7 @@ RunManager::RunManager()
     btTask = new BTTask();
     lotManager = new LotManager();
     ui = new UI();
+    color_logger = new Logger("color.txt");
     run_state = UNDEFINED;
 }
 
@@ -24,6 +25,7 @@ RunManager::~RunManager()
     delete btTask;
     delete lotManager;
     delete ui;
+    delete color_logger;
 }
 
 void RunManager::run()
@@ -86,6 +88,8 @@ void RunManager::execLineTracing()
     int target_color = courceMonitor->getTargetColor();
     int speed = lotManager->getCurrentLotSpeed();
     PID *pid = lotManager->getCurrentLotPID();
+
+    color_logger->logging(current_color);
 
     int turn = 0;
 

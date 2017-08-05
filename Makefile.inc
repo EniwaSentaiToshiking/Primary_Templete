@@ -15,6 +15,7 @@ Lot.o \
 PID.o \
 Measure.o \
 UI.o \
+Logger.o \
 
 SRCLANG := c++
 
