@@ -11,6 +11,7 @@ TouchController::~TouchController()
 {
     state = false;
     prev_state = false;
+    delete touchSensor;
 }
 
 bool TouchController::isPressed()

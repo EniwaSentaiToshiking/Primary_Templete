@@ -25,6 +25,7 @@ static void system_init()
 
 static void system_destroy()
 {
+	delete runManager;
 	ev3_led_set_color(LED_RED);
 }
 
@@ -42,7 +43,12 @@ void main_task(intptr_t unused)
 	{
 		if (ev3_button_is_pressed(BACK_BUTTON))
 			break;
+
+		if (runManager->isTipOver())
+			break;
+
 		runManager->run();
+
 		tslp_tsk(4);
 	}
 

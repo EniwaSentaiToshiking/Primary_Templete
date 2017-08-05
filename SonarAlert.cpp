@@ -7,6 +7,7 @@ SonarAlert::SonarAlert()
 
 SonarAlert::~SonarAlert()
 {
+    delete sonarSensor;
 }
 
 bool SonarAlert::isAlert(int16_t alert_distance)

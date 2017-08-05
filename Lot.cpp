@@ -12,4 +12,5 @@ Lot::Lot(float x0, float x1, float y0, float y1, int speed, float p, float i, fl
 
 Lot::~Lot()
 {
+    delete pid;
 }

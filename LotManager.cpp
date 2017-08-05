@@ -17,6 +17,7 @@ LotManager::LotManager()
 
 LotManager::~LotManager()
 {
+    delete mea;
 }
 
 int LotManager::getCurrentLot()

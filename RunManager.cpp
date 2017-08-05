@@ -16,6 +16,14 @@ RunManager::RunManager()
 
 RunManager::~RunManager()
 {
+    delete tailController;
+    delete balancingWalker;
+    delete touchController;
+    delete courceMonitor;
+    delete pidController;
+    delete btTask;
+    delete lotManager;
+    delete ui;
 }
 
 void RunManager::run()
@@ -68,6 +76,7 @@ void RunManager::execWaitingForStart()
  **/
 void RunManager::execLineTracing()
 {
+
     tailController->rotate(0, 80, false);
 
     if (lotManager->isChangeCurrentLot())
@@ -129,4 +138,9 @@ void RunManager::calibration()
     }
 
     courceMonitor->setTargetColor();
+}
+
+bool RunManager::isTipOver()
+{
+    return balancingWalker->isTipOver();
 }

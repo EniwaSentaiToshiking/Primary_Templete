@@ -48,7 +48,7 @@ private:
 public:
   RunManager();
   void run();
-
+  bool isTipOver();
   virtual ~RunManager();
 };
 

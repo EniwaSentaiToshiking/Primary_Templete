@@ -15,6 +15,14 @@ BalancingWalker::BalancingWalker()
 
 BalancingWalker::~BalancingWalker()
 {
+  setCommand(0, 0, 0);
+  leftMotor->reset();
+  rightMotor->reset();
+
+  delete gyroSensor;
+  delete rightMotor;
+  delete leftMotor;
+  delete balancer;
 }
 
 void BalancingWalker::run()
@@ -52,4 +60,14 @@ void BalancingWalker::setCommand(int forward, int turn, int offset)
   this->forward = forward;
   this->turn = turn;
   this->offset = offset;
+}
+
+bool BalancingWalker::isTipOver()
+{
+  if (gyroSensor->getAnglerVelocity() <= -350 || gyroSensor->getAnglerVelocity() >= 350)
+  {
+    return true;
+  }
+
+  return false;
 }

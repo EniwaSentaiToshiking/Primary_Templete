@@ -11,6 +11,7 @@ CourceMonitor::CourceMonitor()
 
 CourceMonitor::~CourceMonitor()
 {
+    delete colorSensor;
 }
 
 int CourceMonitor::getCurrentColor()

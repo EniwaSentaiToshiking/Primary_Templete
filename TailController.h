@@ -9,14 +9,14 @@ using namespace ev3api;
 
 class TailController
 {
-	private:
-  int current_angle;
+  private:
+	int current_angle;
 
   public:
 	TailController();
 	void rotate(int angle, uint32_t speed, bool block);
 	void reset();
 
-	virtual ~TailController();	
+	virtual ~TailController();
 };
 #endif
