@@ -1,14 +1,14 @@
-#include "PID.h"
+#include "PIDController.h"
 
-PID::PID()
+PIDController::PIDController()
 {
 }
 
-PID::~PID()
+PIDController::~PIDController()
 {
 }
 
-int PID::getTurn(float p_value, float i_value, float d_value, unsigned int sensor_val, unsigned int target_val, int min, int max)
+int PIDController::getTurn(float p_value, float i_value, float d_value, unsigned int sensor_val, unsigned int target_val, int min, int max)
 {
   int p, i, d;
   float KP, KI, KD;
@@ -28,7 +28,7 @@ int PID::getTurn(float p_value, float i_value, float d_value, unsigned int senso
   return math_limit(p + i + d, min, max);
 }
 
-int PID::math_limit(int pid_value, int min, int max)
+int PIDController::math_limit(int pid_value, int min, int max)
 {
   if (pid_value > max)
     pid_value = max;

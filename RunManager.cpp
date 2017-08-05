@@ -7,7 +7,7 @@ RunManager::RunManager()
     balancingWalker = new BalancingWalker();
     touchController = new TouchController();
     courceMonitor = new CourceMonitor();
-    pid = new PID();
+    pidController = new PIDController();
     btTask = new BTTask();
     run_state = UNDEFINED;
 }
@@ -70,7 +70,7 @@ void RunManager::execLineTracing()
 
     int speed = 30;
 
-    int turn = pid->getTurn(0.38, 0.0, 0.01, courceMonitor->getCurrentColor(), courceMonitor->getTargetColor(), speed * -1, speed);
+    int turn = pidController->getTurn(0.38, 0.0, 0.01, courceMonitor->getCurrentColor(), courceMonitor->getTargetColor(), speed * -1, speed);
 
     balancingWalker->setCommand(speed, turn, 0);
     balancingWalker->run();

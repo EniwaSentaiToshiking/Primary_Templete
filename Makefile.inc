@@ -7,7 +7,7 @@ SonarAlert.o \
 BalancerCpp.o \
 BalancingWalker.o \
 CourceMonitor.o \
-PID.o \
+PIDController.o \
 TouchController.o \
 BTTask.o \
 

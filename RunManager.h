@@ -6,7 +6,7 @@
 #include "TailController.h"
 #include "BalancingWalker.h"
 #include "CourceMonitor.h"
-#include "PID.h"
+#include "PIDController.h"
 #include "TouchController.h"
 #include "BTTask.h"
 
@@ -30,7 +30,7 @@ private:
   TailController *tailController;
   BalancingWalker *balancingWalker;
   CourceMonitor *courceMonitor;
-  PID *pid;
+  PIDController *pidController;
   BTTask *btTask;
 
   TouchController *touchController;
