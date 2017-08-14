@@ -3,8 +3,9 @@
 
 #include "ev3api.h"
 
-class Balancer {
-public:
+class Balancer
+{
+  public:
     Balancer();
     virtual ~Balancer();
 
@@ -14,7 +15,7 @@ public:
     int8_t getPwmRight();
     int8_t getPwmLeft();
 
-private:
+  private:
     int mForward;
     int mTurn;
     int mOffset;
@@ -22,4 +23,4 @@ private:
     int8_t mLeftPwm;
 };
 
-#endif  // EV3_UNIT_BALANCERCPP_H_
+#endif // EV3_UNIT_BALANCERCPP_H_

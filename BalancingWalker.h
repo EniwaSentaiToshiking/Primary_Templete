@@ -9,31 +9,24 @@ using namespace ev3api;
 
 class BalancingWalker {
 public:
-    static const int LOW;
-    static const int NORMAL;
-    static const int HIGH;
 
-    BalancingWalker(
-        const GyroSensor* gyroSensor,
-                    Motor* leftMotor,
-                    Motor* rightMotor,
-                    Balancer* balancer);
+    BalancingWalker();
     virtual ~BalancingWalker();
 
     void init();
     void run();
-    void SCENARIO_run(bool flag);
     void stay();
     void setCommand(int forward, int turn, int offset);
+    bool isTipOver();
 
 private:
-    const GyroSensor* mGyroSensor;
-    Motor* mLeftMotor;
-    Motor* mRightMotor;
-    Balancer* mBalancer;
-    int mForward;
-    int mTurn;
-    int mOffset;
+    const GyroSensor* gyroSensor;
+    Motor* leftMotor;
+    Motor* rightMotor;
+    Balancer* balancer;
+    int forward;
+    int turn;
+    int offset;
 };
 
 #endif  // EV3_UNIT_BALANCINGWALKER_H_

@@ -3,19 +3,16 @@
 
 #include "SonarSensor.h"
 
-#define SONAR_ALERT_DISTANCE 15  /* 超音波センサによる障害物検知距離[cm] */
-
 using namespace ev3api;
 
-class SonarAlert {
+class SonarAlert
+{
 private:
-	int16_t distance;
-SonarSensor* mSonarSensor;
-
+	SonarSensor *sonarSensor;
 
 public:
-	SonarAlert(SonarSensor* sonarSensor);
-	bool alert(void);
+	SonarAlert();
+	bool isAlert(int16_t alert_distance);
 
 	virtual ~SonarAlert();
 };

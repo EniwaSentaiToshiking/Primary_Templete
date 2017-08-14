@@ -1,23 +1,19 @@
 #include "UI.h"
 
-UI::UI(){
-
- /*LCD*/
+UI::UI()
+{
     ev3_lcd_fill_rect(0, 0, EV3_LCD_WIDTH, EV3_LCD_HEIGHT, EV3_LCD_WHITE);
-    ev3_lcd_draw_string("EV3way-ET 2016", 0, CALIB_FONT_HEIGHT*1);
+    ev3_lcd_draw_string("EV3way-ET 2017 Cource ??", 0, CALIB_FONT_HEIGHT * 1);
 
-   string_count = 2;
-
+    string_count = 2;
 }
 
-UI::~UI(){
+UI::~UI()
+{
 }
 
-void UI::lcdDraw(const char* string){
-
-
-    ev3_lcd_draw_string(string, 0, CALIB_FONT_HEIGHT*string_count);
-
+void UI::lcdDraw(const char *string)
+{
+    ev3_lcd_draw_string(string, 0, CALIB_FONT_HEIGHT * string_count);
     string_count++;
-
 }

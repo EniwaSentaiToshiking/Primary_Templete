@@ -10,22 +10,25 @@ Balancer::Balancer()
       mTurn(0),
       mOffset(0),
       mRightPwm(0),
-      mLeftPwm(0) {
+      mLeftPwm(0)
+{
 }
 
 /**
  * デストラクタ
  */
-Balancer::~Balancer() {
+Balancer::~Balancer()
+{
 }
 
 /**
  * バランサを初期化する
  * @param offset ジャイロセンサオフセット値
  */
-void Balancer::init(int offset) {
+void Balancer::init(int offset)
+{
     mOffset = offset;
-    balance_init();  // 倒立振子制御初期化
+    balance_init(); // 倒立振子制御初期化
 }
 
 /**
@@ -35,7 +38,8 @@ void Balancer::init(int offset) {
  * @param lwEnc   左車輪エンコーダ値
  * @param battety バッテリ電圧値
  */
-void Balancer::update(int angle, int rwEnc, int lwEnc, int battery) {
+void Balancer::update(int angle, int rwEnc, int lwEnc, int battery)
+{
     // 倒立振子制御APIを呼び出し、倒立走行するための
     // 左右モータ出力値を得る
     balance_control(
@@ -55,9 +59,10 @@ void Balancer::update(int angle, int rwEnc, int lwEnc, int battery) {
  * @param forward 前進値
  * @param turn    旋回値
  */
-void Balancer::setCommand(int forward, int turn, int offset) {
+void Balancer::setCommand(int forward, int turn, int offset)
+{
     mForward = forward;
-    mTurn    = turn;
+    mTurn = turn;
     mOffset = offset;
 }
 
@@ -65,7 +70,8 @@ void Balancer::setCommand(int forward, int turn, int offset) {
  * 右車輪のPWM値を取得する
  * @return 右車輪のPWM値
  */
-int8_t Balancer::getPwmRight() {
+int8_t Balancer::getPwmRight()
+{
     return mRightPwm;
 }
 
@@ -73,6 +79,7 @@ int8_t Balancer::getPwmRight() {
  * 左車輪のPWM値を取得する
  * @return 左車輪のPWM値
  */
-int8_t Balancer::getPwmLeft() {
+int8_t Balancer::getPwmLeft()
+{
     return mLeftPwm;
 }
