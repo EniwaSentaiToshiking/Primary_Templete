@@ -3,8 +3,7 @@
 BalancingWalker::BalancingWalker()
 {
   gyroSensor = new GyroSensor(PORT_4);
-  leftMotor = new Motor(PORT_C);
-  rightMotor = new Motor(PORT_B);
+  motors = new DoubleMotor();
   balancer = new Balancer();
   forward = 0;
   turn = 0;
@@ -16,37 +15,31 @@ BalancingWalker::BalancingWalker()
 BalancingWalker::~BalancingWalker()
 {
   setCommand(0, 0, 0);
-  leftMotor->reset();
-  rightMotor->reset();
+  motors->reset();
 
   delete gyroSensor;
-  delete rightMotor;
-  delete leftMotor;
+  delete motors;
   delete balancer;
 }
 
 void BalancingWalker::run()
 {
   int16_t angle = gyroSensor->getAnglerVelocity();
-  int rightMotorEnc = rightMotor->getCount();
-  int leftMotorEnc = leftMotor->getCount();
+  int rightMotorEnc = this->motors->getRightCount();
+  int leftMotorEnc =  this->motors->getLeftCount(); 
 
   balancer->setCommand(this->forward, this->turn, this->offset);
 
   int battery = ev3_battery_voltage_mV();
   balancer->update(angle, rightMotorEnc, leftMotorEnc, battery);
 
-  leftMotor->setPWM(balancer->getPwmLeft());
-  rightMotor->setPWM(balancer->getPwmRight());
+  motors->setLinearPWM(balancer->getPwmLeft());
 }
 
 void BalancingWalker::init()
 {
   int offset = gyroSensor->getAnglerVelocity();
-
-  leftMotor->reset();
-  rightMotor->reset();
-
+  motors->reset();
   balancer->init(offset);
 }
 
