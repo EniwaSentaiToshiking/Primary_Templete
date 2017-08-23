@@ -38,6 +38,7 @@ private:
   LotManager *lotManager;
   UI *ui;
   Logger *color_logger;
+  Logger *lowpasscolor_logger;//
 
   TouchController *touchController;
 
