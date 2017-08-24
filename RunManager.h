@@ -37,7 +37,7 @@ private:
   BTTask *btTask;
   LotManager *lotManager;
   UI *ui;
-  Logger *filteringColor_logger;//
+  Logger *filteringColor_logger;
 
   TouchController *touchController;
 

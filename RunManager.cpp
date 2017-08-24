@@ -25,7 +25,7 @@ RunManager::~RunManager()
     delete btTask;
     delete lotManager;
     delete ui;
-    delete filteringColor_logger;//
+    delete filteringColor_logger;
 }
 
 void RunManager::run()

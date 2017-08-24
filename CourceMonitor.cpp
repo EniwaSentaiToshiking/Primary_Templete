@@ -28,15 +28,15 @@ int CourceMonitor::lowpassFilter(int colorsensor)
 
   int lowpassfilteringValue = 0;
   int sum = 0;
-  for(int i = 0; i < 10; i++)
+  for(int i = 0; i < buffersize; i++)
   {
     sum += buffer[i];
   }
-  lowpassfilteringValue = sum/10;
+  lowpassfilteringValue = sum/buffersize;
   buffer[bufferSubscript] = lowpassfilteringValue;
   bufferSubscript++;
 
-  if(bufferSubscript > 10)
+  if(bufferSubscript > buffersize)
   {
     bufferSubscript = 0;
   }

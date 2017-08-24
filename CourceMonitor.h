@@ -1,5 +1,6 @@
 #ifndef COURCEMONITOR_H
 #define COURCEMONITOR_H
+#define buffersize 10
 
 #include "ColorSensor.h"
 
@@ -11,7 +12,7 @@ class CourceMonitor
   private:
     int black, white, glay;
     int target_color;
-    int buffer[10] = {};
+    int buffer[buffersize] = {};
     int bufferSubscript;
     int bandMax, bandMin;
 
