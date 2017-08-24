@@ -12,7 +12,8 @@ class CourceMonitor
     int black, white, glay;
     int target_color;
     int buffer[10] = {};
-    int push;
+    int bufferSubscript;
+    int bandMax, bandMin;
 
     ColorSensor *colorSensor;
 
@@ -20,7 +21,7 @@ class CourceMonitor
     CourceMonitor();
     int getCurrentColor();
     int lowpassFilter(int colorsensor);
-    int bandFilter(int lowpasscolor);
+    int bandFilter(int colorsensor);
     int getTargetColor();
     void setColor(char color_initial);
     void setTargetColor();

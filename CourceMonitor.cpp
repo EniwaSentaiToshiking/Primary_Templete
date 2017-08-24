@@ -7,7 +7,9 @@ CourceMonitor::CourceMonitor()
     white = 40;
     glay = (white + black) / 2;
     target_color = (white + black) / 2;
-    push = 0;
+    bufferSubscript = 0;
+    bandMax = 50;
+    bandMin = 5;
 }
 
 CourceMonitor::~CourceMonitor()
@@ -22,30 +24,30 @@ int CourceMonitor::getCurrentColor()
 
 int CourceMonitor::lowpassFilter(int colorsensor)
 {
-  buffer[push] = colorsensor;
+  buffer[bufferSubscript] = colorsensor;
 
-  int lowpassfilter = 0;
+  int lowpassfilteringValue = 0;
   int sum = 0;
   for(int i = 0; i < 10; i++)
   {
     sum += buffer[i];
   }
-  lowpassfilter = sum/10;
-  buffer[push] = lowpassfilter;
-  push++;
+  lowpassfilteringValue = sum/10;
+  buffer[bufferSubscript] = lowpassfilteringValue;
+  bufferSubscript++;
 
-  if(push > 10)
+  if(bufferSubscript > 10)
   {
-    push = 0;
+    bufferSubscript = 0;
   }
 
-  return lowpassfilter;
+  return lowpassfilteringValue;
 }
 
-int CourceMonitor::bandFilter(int colorvalue)
+int CourceMonitor::bandFilter(int colorsensor)
 {
-  int bandfilter = (float)colorvalue * 0.01 * (white - black);
-  return bandfilter;
+  int bandfilteringValue = bandMax - (bandMax - bandMin)*(float)(colorsensor - white) / (black - white);
+  return bandfilteringValue;
 }
 
 int CourceMonitor::getTargetColor()
@@ -75,7 +77,4 @@ void CourceMonitor::setColor(char color_initial)
 void CourceMonitor::setTargetColor()
 {
     target_color = (white + black) / 2;
-    for(int i = 0; i < 10; i++){
-      buffer[i] = target_color;
-    }
 }
