@@ -11,7 +11,7 @@ RunManager::RunManager()
     btTask = new BTTask();
     lotManager = new LotManager();
     ui = new UI();
-    color_logger = new Logger("color.txt");
+    filteringColor_logger = new Logger("lowpassColor.txt");
     run_state = UNDEFINED;
 }
 
@@ -25,7 +25,7 @@ RunManager::~RunManager()
     delete btTask;
     delete lotManager;
     delete ui;
-    delete color_logger;
+    delete filteringColor_logger;
 }
 
 void RunManager::run()
@@ -85,21 +85,23 @@ void RunManager::execLineTracing()
         lotManager->changeCurrentLot();
 
     int current_color = courceMonitor->getCurrentColor();
+    int lowpassfiltering_color = courceMonitor->lowpassFilter(current_color);
+    int bandfiltering_color = courceMonitor->bandFilter(lowpassfiltering_color);
     int target_color = courceMonitor->getTargetColor();
     int speed = lotManager->getCurrentLotSpeed();
     PID *pid = lotManager->getCurrentLotPID();
 
-    color_logger->logging(current_color);
+    filteringColor_logger->logging(bandfiltering_color);
 
     int turn = 0;
 
     if (speed >= 0)
     {
-        turn = pidController->getTurn(pid, current_color, target_color, speed * -1, speed);
+        turn = pidController->getTurn(pid, bandfiltering_color, target_color, speed * -1, speed);
     }
     else
     {
-        turn = pidController->getTurn(pid, current_color, target_color, speed, speed * -1);
+        turn = pidController->getTurn(pid, bandfiltering_color, target_color, speed, speed * -1);
     }
 
     balancingWalker->setCommand(speed, turn, 0);

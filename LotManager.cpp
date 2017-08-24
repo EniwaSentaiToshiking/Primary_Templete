@@ -4,10 +4,10 @@ LotManager::LotManager()
 {
     current_lot = 0;
 
-    /** 
+    /**
      *  Lot
      *  @arg (x0, x1, y0, y1, speed, p, i, d)
-     *  @con x0 < x1, y0 < y1 
+     *  @con x0 < x1, y0 < y1
      */
     lot_list[0] = new Lot(0, 0, -10, 10, 30, 0.00, 0.00, 0.00);
     lot_list[1] = new Lot(10, 20, -10, 10, 0, 0.00, 0.00, 0.00);
