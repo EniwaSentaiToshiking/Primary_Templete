@@ -16,7 +16,7 @@ PID.o \
 Measure.o \
 UI.o \
 Logger.o \
-DoubleMotor.o \
+WheelCorrect.o \
 
 SRCLANG := c++
 

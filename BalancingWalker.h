@@ -4,7 +4,7 @@
 #include "GyroSensor.h"
 #include "Motor.h"
 #include "BalancerCpp.h"
-#include "DoubleMotor.h"
+#include "WheelCorrect.h"
 
 using namespace ev3api;
 
@@ -22,7 +22,9 @@ public:
 
 private:
     const GyroSensor* gyroSensor;
-    DoubleMotor* motors;
+    Motor* leftMotor;
+    Motor* rightMotor;
+    WheelCorrect* wheelCorrect;
     Balancer* balancer;
     int forward;
     int turn;
