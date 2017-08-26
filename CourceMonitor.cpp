@@ -78,3 +78,44 @@ void CourceMonitor::setTargetColor()
 {
     target_color = (white + black) / 2;
 }
+
+bool CourceMonitor::isGrayLine(int current_color){
+   
+    gray_buffer[gray_buffer_num] = current_color;
+    int sum = 0;
+
+    for (int i = 0; i <= gray_buffer_max; i++)
+    {
+        sum = sum + gray_buffer[i];
+    }
+
+    if (gray_buffer_num == gray_buffer_max)
+    {
+        gray_buffer_num = 0;
+    }
+    else
+    {
+        gray_buffer_num++;
+    }
+
+    float average = ((float)sum / (float)gray_buffer_max);
+
+    if (average <= 15 && average >= 13)
+    {
+        gray_count++;
+    }
+
+    if (gray_count == 50)
+    {
+        ev3_speaker_play_tone(480, 100);
+    }
+
+    if (-((float)current_color - average) > gray_limit && current_color < 13 && gray_count >= 20)  //取得した輝度値（黒）-平均値（灰色）>閾値,color<灰色,count>灰色をとる時間
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
