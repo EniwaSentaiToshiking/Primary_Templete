@@ -18,6 +18,7 @@ public:
     void stay();
     void setCommand(int forward, int turn, int offset);
     bool isTipOver();
+    int getGyroOffset();
 
 private:
     const GyroSensor* gyroSensor;

@@ -71,3 +71,7 @@ bool BalancingWalker::isTipOver()
 
   return false;
 }
+
+int BalancingWalker::getGyroOffset(){
+  return this->offset;
+}

@@ -104,7 +104,7 @@ void RunManager::execLineTracing()
         turn = pidController->getTurn(pid, bandfiltering_color, target_color, speed, speed * -1);
     }
 
-    balancingWalker->setCommand(speed, turn, 0);
+    balancingWalker->setCommand(speed, turn, balancingWalker->getGyroOffset());
     balancingWalker->run();
 }
 
