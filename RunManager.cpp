@@ -79,6 +79,7 @@ void RunManager::execWaitingForStart()
 void RunManager::execLineTracing()
 {
 
+    tailController->rocketStart();
     tailController->rotate(0, 80, false);
 
     if (lotManager->isChangeCurrentLot())

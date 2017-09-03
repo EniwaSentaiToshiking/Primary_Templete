@@ -21,6 +21,7 @@ class TailController
 	void bendBody(int targer_angle);
 	void reset();
 	int getCurrentAngle();
+	void rocketStart();
 
 	virtual ~TailController();
 };
