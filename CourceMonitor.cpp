@@ -74,6 +74,24 @@ void CourceMonitor::setColor(char color_initial)
     }
 }
 
+int CourceMonitor::getColor(char color_initial)
+{
+    switch (color_initial)
+    {
+    case 'b':
+        return this->black;
+        break;
+    case 'w':
+        return this->white;
+        break;
+    case 'g':
+        return this->glay;
+        break;
+    }
+
+    return 0;
+}
+
 void CourceMonitor::setTargetColor()
 {
     target_color = (white + black) / 2;

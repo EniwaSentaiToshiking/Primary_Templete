@@ -26,6 +26,7 @@ class CourceMonitor
     int getTargetColor();
     void setColor(char color_initial);
     void setTargetColor();
+    int getColor(char color_initial);
     virtual ~CourceMonitor();
 };
 

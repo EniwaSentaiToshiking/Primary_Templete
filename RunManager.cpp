@@ -118,6 +118,7 @@ void RunManager::execScenarioTracing()
 void RunManager::calibration()
 {
     int count = 0;
+
     while (count < 3)
     {
         if (touchController->isPressed())
@@ -128,13 +129,16 @@ void RunManager::calibration()
             {
             case 0:
                 courceMonitor->setColor('b');
+                displayToLCD(courceMonitor->getColor('b'));
                 break;
             case 1:
                 courceMonitor->setColor('w');
+                displayToLCD(courceMonitor->getColor('w'));
                 break;
 
             case 2:
                 courceMonitor->setColor('g');
+                displayToLCD(courceMonitor->getColor('g'));
                 break;
             }
             count++;
@@ -149,4 +153,10 @@ void RunManager::calibration()
 bool RunManager::isTipOver()
 {
     return balancingWalker->isTipOver();
+}
+
+void RunManager::displayToLCD(int color){
+    char color_string[256];
+    sprintf(color_string, "%d", color);
+    ui->lcdDraw(color_string);
 }
