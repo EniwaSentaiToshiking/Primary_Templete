@@ -46,6 +46,7 @@ private:
   void execLineTracing();
   void execScenarioTracing();
   void calibration();
+  void displayToLCD(int color);
 
 public:
   RunManager();
