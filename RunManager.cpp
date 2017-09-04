@@ -57,7 +57,7 @@ void RunManager::run()
  **/
 void RunManager::execUndefined()
 {
-    tailController->rotate(93, 80, true);
+    tailController->rotate(100, 80, true);
     calibration();
     run_state = WAITING_FOR_START;
 }
@@ -67,7 +67,7 @@ void RunManager::execUndefined()
  **/
 void RunManager::execWaitingForStart()
 {
-    tailController->rotate(93, 80, true);
+    tailController->rotate(95, 80, true);
     if (touchController->isPressed() || btTask->isStart())
         run_state = LINE_TRACE;
     clock->sleep(10);
@@ -79,6 +79,7 @@ void RunManager::execWaitingForStart()
 void RunManager::execLineTracing()
 {
 
+    tailController->rocketStart();
     tailController->rotate(0, 80, false);
 
     if (lotManager->isChangeCurrentLot())
@@ -119,35 +120,51 @@ void RunManager::calibration()
 {
     int count = 0;
 
-    while (count < 3)
+    while (count < 4)
     {
+        if(count == 3){
+            courceMonitor->detectCorrectStartPosition(); 
+        }
+
         if (touchController->isPressed())
         {
-            ev3_speaker_play_tone(880, 100);
-
             switch (count)
             {
             case 0:
                 courceMonitor->setColor('b');
-                displayToLCD(courceMonitor->getColor('b'));
+                
+                if(courceMonitor->isSetColor('b'))
+                {
+                    displayToLCD(courceMonitor->getColor('b'));
+                    count++;
+                }
                 break;
             case 1:
                 courceMonitor->setColor('w');
-                displayToLCD(courceMonitor->getColor('w'));
+                
+                if(courceMonitor->isSetColor('w'))
+                {
+                    displayToLCD(courceMonitor->getColor('w'));
+                    courceMonitor->setTargetColor();
+                    count++;
+                }
                 break;
 
             case 2:
                 courceMonitor->setColor('g');
                 displayToLCD(courceMonitor->getColor('g'));
+                ev3_speaker_play_tone(880, 100);
+                count++;
+                break;
+            default:
+                count++;
+                ev3_speaker_play_tone(880, 100);
                 break;
             }
-            count++;
         }
 
         clock->sleep(10);
     }
-
-    courceMonitor->setTargetColor();
 }
 
 bool RunManager::isTipOver()

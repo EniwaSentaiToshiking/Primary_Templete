@@ -27,6 +27,8 @@ class CourceMonitor
     void setColor(char color_initial);
     void setTargetColor();
     int getColor(char color_initial);
+    void detectCorrectStartPosition();
+    bool isSetColor(char color_initial);
     virtual ~CourceMonitor();
 };
 

@@ -50,6 +50,18 @@ void TailController::reset()
 	ev3_motor_reset_counts(PORT);
 }
 
-int TailController::getCurrentAngle(){
+int TailController::getCurrentAngle()
+{
 	return this->current_angle;
+}
+
+void TailController::rocketStart()
+{
+	static bool startFlag = false;
+
+	if (!startFlag)
+	{
+		rotate(99, 50, true);
+		startFlag = true;
+	}
 }
