@@ -57,7 +57,7 @@ void RunManager::run()
  **/
 void RunManager::execUndefined()
 {
-    tailController->rotate(93, 80, true);
+    tailController->rotate(100, 80, true);
     calibration();
     run_state = WAITING_FOR_START;
 }
@@ -67,7 +67,7 @@ void RunManager::execUndefined()
  **/
 void RunManager::execWaitingForStart()
 {
-    tailController->rotate(93, 80, true);
+    tailController->rotate(95, 80, true);
     if (touchController->isPressed() || btTask->isStart())
         run_state = LINE_TRACE;
     clock->sleep(10);
@@ -120,8 +120,12 @@ void RunManager::calibration()
 {
     int count = 0;
 
-    while (count < 3)
+    while (count < 4)
     {
+        if(count == 3){
+            courceMonitor->detectCorrectStartPosition(); 
+        }
+
         if (touchController->isPressed())
         {
             ev3_speaker_play_tone(880, 100);
@@ -140,6 +144,8 @@ void RunManager::calibration()
             case 2:
                 courceMonitor->setColor('g');
                 displayToLCD(courceMonitor->getColor('g'));
+                break;
+            default:
                 break;
             }
             count++;

@@ -96,3 +96,13 @@ void CourceMonitor::setTargetColor()
 {
     target_color = (white + black) / 2;
 }
+
+void CourceMonitor::detectCorrectStartPosition()
+{
+    int color = colorSensor->getBrightness();
+
+    if(color == target_color + 1 || color  == target_color - 1)
+    {
+        ev3_speaker_play_tone(300, 100);
+    }
+}
