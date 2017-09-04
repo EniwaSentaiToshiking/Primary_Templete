@@ -12,6 +12,9 @@
 #include "LotManager.h"
 #include "UI.h"
 #include "Logger.h"
+#include "StairScenario.h"
+
+#include "Logger.h"
 
 using namespace ev3api;
 
@@ -38,8 +41,12 @@ private:
   LotManager *lotManager;
   UI *ui;
   Logger *filteringColor_logger;
-
+  Motor *leftMotor;
+  Motor *rightMotor;
   TouchController *touchController;
+  StairScenario* stairScenario;
+
+  Logger* logger;
 
   void execUndefined();
   void execWaitingForStart();

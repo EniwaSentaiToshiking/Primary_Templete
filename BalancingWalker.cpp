@@ -43,6 +43,7 @@ void BalancingWalker::run()
 void BalancingWalker::init()
 {
   int offset = gyroSensor->getAnglerVelocity();
+  gyroSensor->setOffset(offset);
 
   leftMotor->reset();
   rightMotor->reset();
@@ -70,4 +71,8 @@ bool BalancingWalker::isTipOver()
   }
 
   return false;
+}
+
+int BalancingWalker::getGyroOffset(){
+  return this->offset;
 }

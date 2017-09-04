@@ -16,6 +16,7 @@ PID.o \
 Measure.o \
 UI.o \
 Logger.o \
+StairScenario.o \
 
 SRCLANG := c++
 

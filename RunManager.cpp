@@ -4,6 +4,7 @@ RunManager::RunManager()
 {
     clock = new Clock();
     tailController = new TailController();
+    tailController->reset();
     balancingWalker = new BalancingWalker();
     touchController = new TouchController();
     courceMonitor = new CourceMonitor();
@@ -12,7 +13,11 @@ RunManager::RunManager()
     lotManager = new LotManager();
     ui = new UI();
     filteringColor_logger = new Logger("lowpassColor.txt");
+    stairScenario = new StairScenario(balancingWalker, tailController);
     run_state = UNDEFINED;
+
+    logger = new Logger("runmanager.log");
+    clock->reset();
 }
 
 RunManager::~RunManager()
@@ -26,10 +31,14 @@ RunManager::~RunManager()
     delete lotManager;
     delete ui;
     delete filteringColor_logger;
+    delete stairScenario;
+
+    // delete logger;
 }
 
 void RunManager::run()
 {
+    logger->logging(clock->now());
     switch (run_state)
     {
     case UNDEFINED:
@@ -67,10 +76,10 @@ void RunManager::execUndefined()
  **/
 void RunManager::execWaitingForStart()
 {
+    clock->sleep(10);
     tailController->rotate(93, 80, true);
     if (touchController->isPressed() || btTask->isStart())
-        run_state = LINE_TRACE;
-    clock->sleep(10);
+        run_state = SCENARIO_TRACE; // シナリオ実装のために書き換えている
 }
 
 /**
@@ -91,8 +100,6 @@ void RunManager::execLineTracing()
     int speed = lotManager->getCurrentLotSpeed();
     PID *pid = lotManager->getCurrentLotPID();
 
-    filteringColor_logger->logging(bandfiltering_color);
-
     int turn = 0;
 
     if (speed >= 0)
@@ -104,7 +111,7 @@ void RunManager::execLineTracing()
         turn = pidController->getTurn(pid, bandfiltering_color, target_color, speed, speed * -1);
     }
 
-    balancingWalker->setCommand(speed, turn, 0);
+    balancingWalker->setCommand(speed, turn, balancingWalker->getGyroOffset());
     balancingWalker->run();
 }
 
@@ -113,6 +120,7 @@ void RunManager::execLineTracing()
  */
 void RunManager::execScenarioTracing()
 {
+    stairScenario->run();
 }
 
 void RunManager::calibration()
@@ -120,6 +128,7 @@ void RunManager::calibration()
     int count = 0;
     while (count < 3)
     {
+        clock->sleep(10);
         if (touchController->isPressed())
         {
             ev3_speaker_play_tone(880, 100);
@@ -139,8 +148,6 @@ void RunManager::calibration()
             }
             count++;
         }
-
-        clock->sleep(10);
     }
 
     courceMonitor->setTargetColor();
