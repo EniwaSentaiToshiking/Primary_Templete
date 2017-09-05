@@ -71,3 +71,9 @@ bool BalancingWalker::isTipOver()
 
   return false;
 }
+
+void BalancingWalker::stopRun()
+{
+    setCommand(0, 0, 0);
+    run();
+}
