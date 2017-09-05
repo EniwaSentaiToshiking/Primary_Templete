@@ -14,7 +14,7 @@ bool SonarAlert::isAlert(int16_t alert_distance)
 {
 
     static uint32_t counter = 0;
-    static bool alert = false;
+    bool alert = false;
 
     if (++counter == 40 / 4) /* 約40msec周期毎に障害物検知  */
     {
