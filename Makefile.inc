@@ -16,6 +16,7 @@ PID.o \
 Measure.o \
 UI.o \
 Logger.o \
+LookupMethod.o \
 TailWalker.o \
 
 SRCLANG := c++

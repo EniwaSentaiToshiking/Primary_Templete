@@ -5,6 +5,7 @@ TailWalker::TailWalker()
     leftMotor = new Motor(PORT_C);
     rightMotor = new Motor(PORT_B);
     clock = new Clock();
+    mea = new Measure();
 }
 
 TailWalker::~TailWalker() {}
@@ -17,21 +18,26 @@ void TailWalker::balance()
     stop();
 }
 
-void TailWalker::forward(int pwm, int time)
+void TailWalker::forward(int pwm, float distance)
 {
-    clock->reset();
-    while (clock->now() <= float(time))
+    mea->measure();
+    float beginDistance = mea->getCurrentDistance();
+
+    while (mea->getCurrentDistance() - beginDistance <= float(distance))
     {
         leftMotor->setPWM(pwm);
         rightMotor->setPWM(pwm);
+        mea->measure();
     }
     stop();
 }
 
-void TailWalker::backward(int pwm, int time)
+void TailWalker::backward(int pwm, float distance)
 {
-    clock->reset();
-    while (clock->now() >= float(time))
+    mea->measure();
+    float beginDistance = mea->getCurrentDistance();
+
+    while (beginDistance - mea->getCurrentDistance() <= float(distance))
     {
         leftMotor->setPWM(pwm);
         rightMotor->setPWM(pwm);
@@ -58,26 +64,30 @@ void TailWalker::stop()
     clock->sleep(300);
 }
 
-void TailWalker::leftTurn(int motor_count)
+void TailWalker::leftTurn(int angle)
 {
-    float begin_motor_count = leftMotor->getCount();
+    mea->measure();
+    float begin_direction = mea->getCurrentDirection();
 
-    while (leftMotor->getCount() - begin_motor_count < motor_count)
+    while (mea->getCurrentDirection() - begin_direction < angle)
     {
-        leftMotor->setPWM(TURN_PWM);
-        rightMotor->setPWM(TURN_PWM * -1);
+        leftMotor->setPWM(TURN_PWM * -1);
+        rightMotor->setPWM(TURN_PWM);
+        mea->measure();
     }
     stop();
 }
 
-void TailWalker::rightTurn(int motor_count)
+void TailWalker::rightTurn(int angle)
 {
-    float begin_motor_count = rightMotor->getCount();
+    mea->measure();
+    float begin_direction = mea->getCurrentDirection();
 
-    while (rightMotor->getCount() - begin_motor_count < motor_count)
+    while (begin_direction - mea->getCurrentDirection() < angle)
     {
-        leftMotor->setPWM(TURN_PWM * -1);
-        rightMotor->setPWM(TURN_PWM);
+        leftMotor->setPWM(TURN_PWM);
+        rightMotor->setPWM(TURN_PWM * -1);
+        mea->measure();
     }
     stop();
 }
@@ -86,12 +96,23 @@ void TailWalker::lineTrace(int color, int target_color)
 {
     if (color >= target_color)
     {
-        rightMotor->setPWM(6);
+        rightMotor->setPWM(4);
         leftMotor->setPWM(9);
     }
     else
     {
         rightMotor->setPWM(9);
-        leftMotor->setPWM(6);
+        leftMotor->setPWM(4);
     }
+}
+
+void TailWalker::reset_distance()
+{
+    mea->distance_reset();
+}
+
+float TailWalker::getDistance()
+{
+    mea->measure();
+    return mea->getCurrentDistance();
 }
