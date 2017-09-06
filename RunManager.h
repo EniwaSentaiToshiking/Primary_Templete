@@ -12,6 +12,7 @@
 #include "LotManager.h"
 #include "UI.h"
 #include "Logger.h"
+#include "LookupMethod.h"
 
 using namespace ev3api;
 
@@ -38,7 +39,7 @@ private:
   LotManager *lotManager;
   UI *ui;
   Logger *filteringColor_logger;
-
+  LookupMethod *lookupMethod;
   TouchController *touchController;
 
   void execUndefined();
@@ -46,6 +47,8 @@ private:
   void execLineTracing();
   void execScenarioTracing();
   void calibration();
+  void displayToLCD(int color);
+  int getCourceColor();
 
 public:
   RunManager();

@@ -10,7 +10,7 @@ class LotManager
 
   private:
     int current_lot;
-    Lot *lot_list[2];
+    Lot *lot_list[8];
     Measure *mea;
 
   public:
@@ -22,6 +22,8 @@ class LotManager
     PID *getCurrentLotPID();
     void changeCurrentLot();
     bool isChangeCurrentLot();
+    void courseR();
+    void courseL();
 };
 
 #endif

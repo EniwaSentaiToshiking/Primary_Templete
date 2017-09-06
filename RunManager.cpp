@@ -12,6 +12,7 @@ RunManager::RunManager()
     lotManager = new LotManager();
     ui = new UI();
     filteringColor_logger = new Logger("lowpassColor.txt");
+    lookupMethod = new LookupMethod(balancingWalker, tailController);
     run_state = UNDEFINED;
 }
 
@@ -57,7 +58,7 @@ void RunManager::run()
  **/
 void RunManager::execUndefined()
 {
-    tailController->rotate(93, 80, true);
+    tailController->rotate(100, 80, true);
     calibration();
     run_state = WAITING_FOR_START;
 }
@@ -67,7 +68,7 @@ void RunManager::execUndefined()
  **/
 void RunManager::execWaitingForStart()
 {
-    tailController->rotate(93, 80, true);
+    tailController->rotate(95, 80, true);
     if (touchController->isPressed() || btTask->isStart())
         run_state = LINE_TRACE;
     clock->sleep(10);
@@ -79,33 +80,38 @@ void RunManager::execWaitingForStart()
 void RunManager::execLineTracing()
 {
 
+    tailController->rocketStart();
     tailController->rotate(0, 80, false);
 
     if (lotManager->isChangeCurrentLot())
         lotManager->changeCurrentLot();
 
-    int current_color = courceMonitor->getCurrentColor();
-    int lowpassfiltering_color = courceMonitor->lowpassFilter(current_color);
-    int bandfiltering_color = courceMonitor->bandFilter(lowpassfiltering_color);
+    int current_color = getCourceColor();
     int target_color = courceMonitor->getTargetColor();
     int speed = lotManager->getCurrentLotSpeed();
     PID *pid = lotManager->getCurrentLotPID();
 
-    filteringColor_logger->logging(bandfiltering_color);
+    filteringColor_logger->logging(current_color);
 
     int turn = 0;
 
     if (speed >= 0)
     {
-        turn = pidController->getTurn(pid, bandfiltering_color, target_color, speed * -1, speed);
+        turn = pidController->getTurn(pid, current_color, target_color, speed * -1, speed);
     }
     else
     {
-        turn = pidController->getTurn(pid, bandfiltering_color, target_color, speed, speed * -1);
+        turn = pidController->getTurn(pid, current_color, target_color, speed, speed * -1);
     }
 
     balancingWalker->setCommand(speed, turn, 0);
     balancingWalker->run();
+
+    if(lookupMethod->isGate(10))
+    {
+        run_state = SCENARIO_TRACE;
+        clock->reset();
+    }
 }
 
 /**
@@ -113,40 +119,73 @@ void RunManager::execLineTracing()
  */
 void RunManager::execScenarioTracing()
 {
+    lookupMethod->run(getCourceColor());
 }
 
 void RunManager::calibration()
 {
     int count = 0;
-    while (count < 3)
+
+    while (count < 4)
     {
+        if(count == 3){
+            courceMonitor->detectCorrectStartPosition(); 
+        }
+
         if (touchController->isPressed())
         {
-            ev3_speaker_play_tone(880, 100);
-
             switch (count)
             {
             case 0:
                 courceMonitor->setColor('b');
+                
+                if(courceMonitor->isSetColor('b'))
+                {
+                    displayToLCD(courceMonitor->getColor('b'));
+                    count++;
+                }
                 break;
             case 1:
                 courceMonitor->setColor('w');
+                
+                if(courceMonitor->isSetColor('w'))
+                {
+                    displayToLCD(courceMonitor->getColor('w'));
+                    courceMonitor->setTargetColor();
+                    count++;
+                }
                 break;
 
             case 2:
                 courceMonitor->setColor('g');
+                displayToLCD(courceMonitor->getColor('g'));
+                ev3_speaker_play_tone(880, 100);
+                count++;
+                break;
+            default:
+                count++;
+                ev3_speaker_play_tone(880, 100);
                 break;
             }
-            count++;
         }
 
         clock->sleep(10);
     }
-
-    courceMonitor->setTargetColor();
 }
 
 bool RunManager::isTipOver()
 {
     return balancingWalker->isTipOver();
+}
+
+void RunManager::displayToLCD(int color){
+    char color_string[256];
+    sprintf(color_string, "%d", color);
+    ui->lcdDraw(color_string);
+}
+
+int RunManager::getCourceColor(){
+    int current_color = courceMonitor->getCurrentColor();
+    int bandfiltering_color = courceMonitor->bandFilter(current_color);
+    return bandfiltering_color;
 }

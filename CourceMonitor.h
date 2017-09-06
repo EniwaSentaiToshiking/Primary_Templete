@@ -34,6 +34,9 @@ class CourceMonitor
     void setColor(char color_initial);
     void setTargetColor();
     bool isGrayLine(int current_color);
+    int getColor(char color_initial);
+    void detectCorrectStartPosition();
+    bool isSetColor(char color_initial);
     virtual ~CourceMonitor();
 };
 

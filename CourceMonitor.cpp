@@ -3,8 +3,8 @@
 CourceMonitor::CourceMonitor()
 {
     colorSensor = new ColorSensor(PORT_3);
-    black = 0;
-    white = 40;
+    black = -1;
+    white = -1;
     glay = (white + black) / 2;
     target_color = (white + black) / 2;
     bufferSubscript = 0;
@@ -63,15 +63,39 @@ void CourceMonitor::setColor(char color_initial)
     switch (color_initial)
     {
     case 'b':
-        black = color;
+        if(color < 10)
+        {
+            black = color;
+        }
         break;
     case 'w':
-        white = color;
+        if(color > 30)
+        {
+            white = color;
+        }
         break;
     case 'g':
         glay = color;
         break;
     }
+}
+
+int CourceMonitor::getColor(char color_initial)
+{
+    switch (color_initial)
+    {
+    case 'b':
+        return this->black;
+        break;
+    case 'w':
+        return this->white;
+        break;
+    case 'g':
+        return this->glay;
+        break;
+    }
+
+    return 0;
 }
 
 void CourceMonitor::setTargetColor()
@@ -118,4 +142,25 @@ bool CourceMonitor::isGrayLine(int current_color){
     {
         return false;
     }
+}
+void CourceMonitor::detectCorrectStartPosition()
+{
+    int color = colorSensor->getBrightness();
+
+    if(color == target_color + 1 || color  == target_color - 1)
+    {
+        ev3_speaker_play_tone(300, 100);
+    }
+}
+
+bool CourceMonitor::isSetColor(char color_initial)
+{
+    if(getColor(color_initial) == -1)
+    {
+        ev3_speaker_play_tone(300, 100);
+        return false;
+    }
+
+    ev3_speaker_play_tone(880, 100);
+    return true;
 }

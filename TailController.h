@@ -2,6 +2,7 @@
 #define TailController_H
 
 #include "Motor.h"
+#include "Clock.h"
 
 using namespace ev3api;
 
@@ -9,13 +10,18 @@ using namespace ev3api;
 
 class TailController
 {
-  private:
+	private:
+	Clock *clock;
 	int current_angle;
 
   public:
 	TailController();
 	void rotate(int angle, uint32_t speed, bool block);
+	void standUpBody(int target_angle);
+	void bendBody(int targer_angle);
 	void reset();
+	int getCurrentAngle();
+	void rocketStart();
 
 	virtual ~TailController();
 };
