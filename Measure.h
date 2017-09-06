@@ -35,6 +35,9 @@ private:
   float y1 = 0.0; //更新後y座標
   float z1 = 0.0; //更新前角度
 
+  float current_distance = 0.0;
+  float current_direction = 0.0;
+
   Motor *leftMotor;
   Motor *rightMotor;
 
@@ -42,6 +45,8 @@ public:
   Measure();
   void measure();
   void distance_reset();
+  float getCurrentDirection();
+  float getCurrentDistance();
 
   float point_x = 0.0; //自己位置のx座標データ
   float point_y = 0.0; //自己位置のy座標データ
