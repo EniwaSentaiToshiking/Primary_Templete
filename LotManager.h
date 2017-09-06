@@ -23,6 +23,7 @@ class LotManager
     void changeCurrentLot();
     bool isChangeCurrentLot();
     void courseR();
+    void courseL();
 };
 
 #endif

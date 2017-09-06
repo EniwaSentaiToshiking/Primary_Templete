@@ -9,7 +9,13 @@ LotManager::LotManager()
      *  @arg (x0, x1, y0, y1, speed, p, i, d)
      *  @con x0 < x1, y0 < y1
      */
-    courseR();
+    int flag = 0;
+
+    if(flag==0){
+        courseR();
+    }else{
+        courseL();
+    }
 
     mea = new Measure();
 
@@ -30,6 +36,18 @@ void LotManager::courseR()
     lot_list[5] = new Lot(0, 250, -250, -200, 130, 0.4, 0.00, 0.03);
     lot_list[6] = new Lot(0, 250, -430, -395, 30, 0.86, 0.00, 0.04);
     lot_list[7] = new Lot(170, 220, -430, 0, 30, 0.4, 0.00, 0.03);
+}
+
+void LotManager::courseL()
+{
+    lot_list[0] = new Lot(0, 180, -30, 30, 130, 0.4, 0.0, 0.03);
+    lot_list[1] = new Lot(180, 220, -30, 30, 80, 1.3, 0.01, 0.05);
+    lot_list[2] = new Lot(150, 200, -50, -20, 100, 0.9, 0.01, 0.04);
+    lot_list[3] = new Lot(0, 30, -100, -75, 80, 1.4, 0.0, 0.06);
+    lot_list[4] = new Lot(50, 100, -200, -75, 80, 1.4, 0.0, 0.06);
+    lot_list[5] = new Lot(0, 250, -250, -200, 130, 0.4, 0.00, 0.03);
+    lot_list[6] = new Lot(0, 250, -400, -360, 20, 0.86, 0.00, 0.04);
+    lot_list[7] = new Lot(120, 250, -700, 0, 20, 0.4, 0.00, 0.03);
 }
 
 int LotManager::getCurrentLot()
