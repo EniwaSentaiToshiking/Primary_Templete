@@ -26,7 +26,7 @@ void TailController::rotate(int angle, uint32_t speed, bool block)
 
 void TailController::standUpBody(int target_angle)
 {
-	for (int i = current_angle; i <= target_angle; i++)
+	for (int i = current_angle; i <= target_angle; i = i + 2)
 	{
 		rotate(i, 10, true);
 		clock->sleep(4);
@@ -36,7 +36,7 @@ void TailController::standUpBody(int target_angle)
 
 void TailController::bendBody(int target_angle)
 {
-	for (int i = current_angle; i >= target_angle; i--)
+	for (int i = current_angle; i >= target_angle; i = i - 2)
 	{
 		rotate(i, 10, true);
 		clock->sleep(300);

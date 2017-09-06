@@ -32,6 +32,8 @@ void Measure::measure()
 
     point_x = x1;
     point_y = y1; //現在の座標を実際に取得する値
+    current_distance += D;
+    current_direction += (360 / (2.0 * M_PI *  (2 * d)) * (TR - TL));
 
     x0 = x1;
     y0 = y1;
@@ -47,4 +49,16 @@ void Measure::distance_reset()
     z0 = 0.0;
     r1 = r0;
     l1 = l0;
+    current_direction = 0.0;
+    current_distance = 0.0;
+}
+
+float Measure::getCurrentDirection()
+{
+    return current_direction;
+}
+
+float Measure::getCurrentDistance()
+{
+    return current_distance;
 }

@@ -12,6 +12,7 @@ RunManager::RunManager()
     lotManager = new LotManager();
     ui = new UI();
     filteringColor_logger = new Logger("lowpassColor.txt");
+    lookupMethod = new LookupMethod(balancingWalker, tailController);
     run_state = UNDEFINED;
 }
 
@@ -85,28 +86,32 @@ void RunManager::execLineTracing()
     if (lotManager->isChangeCurrentLot())
         lotManager->changeCurrentLot();
 
-    int current_color = courceMonitor->getCurrentColor();
-    int lowpassfiltering_color = courceMonitor->lowpassFilter(current_color);
-    int bandfiltering_color = courceMonitor->bandFilter(lowpassfiltering_color);
+    int current_color = getCourceColor();
     int target_color = courceMonitor->getTargetColor();
     int speed = lotManager->getCurrentLotSpeed();
     PID *pid = lotManager->getCurrentLotPID();
 
-    filteringColor_logger->logging(bandfiltering_color);
+    filteringColor_logger->logging(current_color);
 
     int turn = 0;
 
     if (speed >= 0)
     {
-        turn = pidController->getTurn(pid, bandfiltering_color, target_color, speed * -1, speed);
+        turn = pidController->getTurn(pid, current_color, target_color, speed * -1, speed);
     }
     else
     {
-        turn = pidController->getTurn(pid, bandfiltering_color, target_color, speed, speed * -1);
+        turn = pidController->getTurn(pid, current_color, target_color, speed, speed * -1);
     }
 
     balancingWalker->setCommand(speed, turn, 0);
     balancingWalker->run();
+
+    if(lookupMethod->isGate(10))
+    {
+        run_state = SCENARIO_TRACE;
+        clock->reset();
+    }
 }
 
 /**
@@ -114,6 +119,7 @@ void RunManager::execLineTracing()
  */
 void RunManager::execScenarioTracing()
 {
+    lookupMethod->run(getCourceColor());
 }
 
 void RunManager::calibration()
@@ -176,4 +182,10 @@ void RunManager::displayToLCD(int color){
     char color_string[256];
     sprintf(color_string, "%d", color);
     ui->lcdDraw(color_string);
+}
+
+int RunManager::getCourceColor(){
+    int current_color = courceMonitor->getCurrentColor();
+    int bandfiltering_color = courceMonitor->bandFilter(current_color);
+    return bandfiltering_color;
 }
