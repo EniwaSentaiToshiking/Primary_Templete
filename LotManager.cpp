@@ -9,7 +9,7 @@ LotManager::LotManager()
      *  @arg (x0, x1, y0, y1, speed, p, i, d)
      *  @con x0 < x1, y0 < y1
      */
-    int flag = 1;
+    int flag = 0;
 
     if(flag==0){
         courseR();
@@ -34,7 +34,7 @@ void LotManager::courseR()
     lot_list[1] = new Lot(180, 200, -20, 20, 100, 0.9, 0.01, 0.04);
     lot_list[2] = new Lot(0, 180, -210, -10, 80, 0.86, 0.00, 0.04);
     lot_list[3] = new Lot(100, 140, -100, -50, 80, 1.0, 0.00, 0.04);
-    lot_list[4] = new Lot(75, 125, -150, -100, 80, 0.86, 0.01, 0.04);
+    lot_list[4] = new Lot(75, 125, -150, -100, 110, 0.86, 0.01, 0.04);
     lot_list[5] = new Lot(0, 250, -250, -200, 130, 0.4, 0.00, 0.03);
     lot_list[6] = new Lot(0, 250, -430, -395, 20, 0.86, 0.00, 0.04);
     lot_list[7] = new Lot(170, 220, -430, 0, 20, 0.4, 0.00, 0.03);
