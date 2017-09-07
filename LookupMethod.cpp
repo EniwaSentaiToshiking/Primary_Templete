@@ -11,7 +11,7 @@ LookupMethod::LookupMethod(BalancingWalker *balancingWalker, TailController *tai
 
 LookupMethod::~LookupMethod() {}
 
-void LookupMethod::run(int color)
+bool LookupMethod::run()
 {
 
     static State state = TRANSITION_TO_TAIL_RUN;
@@ -70,9 +70,11 @@ void LookupMethod::run(int color)
         break;
         
     case LINE_TRACE:
-        tailWalker->lineTrace(color, 23);
+        return true;
         break;
     }
+
+    return false;
 }
 
 bool LookupMethod::isGate(int distance)

@@ -33,7 +33,7 @@ public:
   bool isBackLine = false;
 
   LookupMethod(BalancingWalker *balancingWalker, TailController *tailController);
-  void run(int color);
+  bool run();
   bool isGate(int distance);
 
   virtual ~LookupMethod();
