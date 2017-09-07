@@ -5,8 +5,8 @@ CourceMonitor::CourceMonitor()
     colorSensor = new ColorSensor(PORT_3);
     black = -1;
     white = -1;
-    glay = (white + black) / 2;
-    target_color = (white + black) / 2;
+    glay = 23;
+    target_color = 25;
     bufferSubscript = 0;
     bandMax = 50;
     bandMin = 5;
@@ -75,7 +75,7 @@ void CourceMonitor::setColor(char color_initial)
         }
         break;
     case 'g':
-        glay = color;
+        glay = 23;
         break;
     }
 }
@@ -100,7 +100,7 @@ int CourceMonitor::getColor(char color_initial)
 
 void CourceMonitor::setTargetColor()
 {
-    target_color = (white + black) / 2;
+    target_color = 25;
 }
 
 void CourceMonitor::detectCorrectStartPosition()
