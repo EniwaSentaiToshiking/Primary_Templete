@@ -84,7 +84,7 @@ void StairScenario::run() {
         goBalancingWalk(0);
       } 
       if(inTime(1000  , 100000000)) {
-        goBalancingWalk(10);
+        goBalancingWalk(20);
         // 段差検知
         if (fabs(gyroSensor->getAnglerVelocity()) > THRESHOLD) {
           ev3_speaker_play_tone(600, 100);
@@ -111,10 +111,10 @@ void StairScenario::run() {
     case STEP1:
       tailController->rotate(0, 80, false);
       if(inTime(0  , 200000000)) {
-        goBalancingWalk(80);
+        goBalancingWalk(70);
       }
       measure->measure();
-      if((measure->point_x) >  4.0) {
+      if((measure->point_x) >  2.0) {
         ev3_speaker_play_tone(300, 100);
         goBalancingWalk(0);
         rotation = leftMotor->getCount();
@@ -162,7 +162,7 @@ void StairScenario::run() {
       if(inTime(2000  , 1000000000)) {
         leftMotor->setPWM(10);
         rightMotor->setPWM(-10);
-        if(leftMotor->getCount() - rotation >= 750) {
+        if(leftMotor->getCount() - rotation >= 720) {
           ev3_speaker_play_tone(800,100);
           balancingWalker->resetWheel();
           goStraight(0);
@@ -187,18 +187,18 @@ void StairScenario::run() {
         tailController->rotate(89, 10, true);
         goStraight(5);
         clock->wait(400);
-        tailController->rotate(93, 10, true);
+        tailController->rotate(92, 10, true);
         ev3_speaker_play_tone(900,100);
         nextState();
         break;
 
     case GOTOSTAIR3:
-      if(inTime(0, 1000)) {
-        tailController->rotate(0,50,false);
+      if(inTime(0, 3000)) {
+        tailController->rotate(50,10,false);
         goBalancingWalk(0);
       }
-      if(inTime(100  , 100000000)) {
-        tailController->rotate(0,50,false);
+      if(inTime(3000  , 100000000)) {
+        tailController->rotate(0,10,true);
         goBalancingWalk(20);
         // 段差検知
         if (fabs(gyroSensor->getAnglerVelocity()) > THRESHOLD) {
@@ -213,9 +213,9 @@ void StairScenario::run() {
     case STEP2:
       if(inTime(0  , 100000000)) {
         tailController->rotate(0, 80, false);
-        goBalancingWalk(80);
+        goBalancingWalk(70);
         measure->measure();
-        if(measure->point_x > 4.0) {
+        if(measure->point_x > 10.0) {
           ev3_speaker_play_tone(400, 100);
           measure->measure();
           measure->distance_reset();
