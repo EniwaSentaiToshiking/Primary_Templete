@@ -18,6 +18,7 @@ UI.o \
 Logger.o \
 LookupMethod.o \
 TailWalker.o \
+Garage.o \
 
 SRCLANG := c++
 
