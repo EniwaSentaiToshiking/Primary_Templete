@@ -13,6 +13,7 @@ RunManager::RunManager()
     ui = new UI();
     filteringColor_logger = new Logger("lowpassColor.txt");
     lookupMethod = new LookupMethod(balancingWalker, tailController);
+    tailWalker = new TailWalker();
     run_state = UNDEFINED;
 }
 
@@ -119,7 +120,10 @@ void RunManager::execLineTracing()
  */
 void RunManager::execScenarioTracing()
 {
-    lookupMethod->run(getCourceColor());
+    if (lookupMethod->run())
+    {
+        tailWalker->lineTrace(getCourceColor(), 23);
+    }
 }
 
 void RunManager::calibration()

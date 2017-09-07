@@ -13,6 +13,7 @@
 #include "UI.h"
 #include "Logger.h"
 #include "LookupMethod.h"
+#include "TailWalker.h"
 
 using namespace ev3api;
 
@@ -41,6 +42,7 @@ private:
   Logger *filteringColor_logger;
   LookupMethod *lookupMethod;
   TouchController *touchController;
+  TailWalker *tailWalker;
 
   void execUndefined();
   void execWaitingForStart();
