@@ -4,8 +4,8 @@
 #include "ColorSensor.h"
 
 #define buffersize 10
-#define gray_buffer_max 99
-#define gray_limit 27
+#define gray_buffer_max 250
+#define gray_limit 4
 
 using namespace ev3api;
 
@@ -19,7 +19,7 @@ class CourceMonitor
     int bufferSubscript;
     int bandMax, bandMin;
 
-    int gray_buffer[100] = {};
+    int gray_buffer[250] = {};
     int gray_buffer_num = 0;
     int gray_count = 0;
 
