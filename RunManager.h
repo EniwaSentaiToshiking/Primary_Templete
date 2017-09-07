@@ -14,6 +14,7 @@
 #include "Logger.h"
 #include "LookupMethod.h"
 #include "TailWalker.h"
+#include "Garage.h"
 
 using namespace ev3api;
 
@@ -26,7 +27,8 @@ private:
     UNDEFINED,         //未定義
     WAITING_FOR_START, //スタート待ち
     LINE_TRACE,        //走行中
-    SCENARIO_TRACE     //難所
+    SCENARIO_TRACE,    //難所
+    GARAGE_IN
   };
 
   State run_state;
@@ -43,11 +45,13 @@ private:
   LookupMethod *lookupMethod;
   TouchController *touchController;
   TailWalker *tailWalker;
+  Garage *garage;
 
   void execUndefined();
   void execWaitingForStart();
   void execLineTracing();
   void execScenarioTracing();
+  void execGarageIn();
   void calibration();
   void displayToLCD(int color);
   int getCourceColor();

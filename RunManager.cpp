@@ -14,6 +14,7 @@ RunManager::RunManager()
     filteringColor_logger = new Logger("lowpassColor.txt");
     lookupMethod = new LookupMethod(balancingWalker, tailController);
     tailWalker = new TailWalker();
+    garage = new Garage(tailController);
     run_state = UNDEFINED;
 }
 
@@ -48,6 +49,9 @@ void RunManager::run()
 
     case SCENARIO_TRACE:
         execScenarioTracing();
+        break;
+    case GARAGE_IN:
+        execGarageIn();
         break;
     default:
         break;
@@ -124,6 +128,11 @@ void RunManager::execScenarioTracing()
     {
         tailWalker->lineTrace(getCourceColor(), 23);
     }
+}
+
+void RunManager::execGarageIn()
+{
+    garage->run(getCourceColor());
 }
 
 void RunManager::calibration()
