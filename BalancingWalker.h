@@ -15,6 +15,9 @@ public:
 
     void init();
     void run();
+    void linearRun();
+    void spinRun();
+    void resetWheel();
     void stay();
     void setCommand(int forward, int turn, int offset);
     bool isTipOver();

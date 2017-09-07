@@ -62,7 +62,8 @@ void StairScenario::goLineTrace(int speed) {
 
 void StairScenario::goBalancingWalk(int speed) {
   balancingWalker->setCommand(speed, 0, balancingWalker->getGyroOffset()); 
-  balancingWalker->run();
+  // balancingWalker->run();
+  balancingWalker->linearRun();
 }
 
 bool StairScenario::inTime(int time1,int time2) {
@@ -73,8 +74,8 @@ bool StairScenario::inTime(int time1,int time2) {
 void StairScenario::run() {
   switch(stairState) {
     case PREPARE:
+      tailController->rotate(0, 100, false);
       goBalancingWalk(0);
-      tailController->rotate(0, 100, true);
       nextState();
       break;
       
@@ -83,10 +84,9 @@ void StairScenario::run() {
         goBalancingWalk(0);
       } 
       if(inTime(1000  , 100000000)) {
-        goBalancingWalk(30);
+        goBalancingWalk(10);
         // 段差検知
-        if (fabs(gyroSensor->getAnglerVelocity()) > 150.0) {
-          goBalancingWalk(-10);
+        if (fabs(gyroSensor->getAnglerVelocity()) > THRESHOLD) {
           ev3_speaker_play_tone(600, 100);
           measure->measure();
           measure->distance_reset();
@@ -95,29 +95,27 @@ void StairScenario::run() {
       } 
       break;
 
-    case BACK:
-      if(inTime(0, 1000000000)) {
-        goBalancingWalk(-10);
-        measure->measure();
-        if((measure->point_x) < - 3.0) {
-          ev3_speaker_play_tone(400,100);
-          measure->measure();
-          measure->distance_reset();
-          nextState();
-        }
-      } 
-      break;
+    // case BACK:
+    //   if(inTime(0, 1000000000)) {
+    //     goBalancingWalk(-10);
+    //     measure->measure();
+    //     if((measure->point_x) < - 4.0) {
+    //       ev3_speaker_play_tone(400,100);
+    //       measure->measure();
+    //       measure->distance_reset();
+    //       nextState();
+    //     }
+    //   } 
+    //   break;
 
     case STEP1:
       tailController->rotate(0, 80, false);
-      if(inTime(0  , 2000)) {
-        goBalancingWalk(0);
-      }
-      if(inTime(2000  , 100000000)) {
-        goBalancingWalk(120);
+      if(inTime(0  , 200000000)) {
+        goBalancingWalk(80);
       }
       measure->measure();
-      if((measure->point_x) >  13.0) {
+      if((measure->point_x) >  4.0) {
+        ev3_speaker_play_tone(300, 100);
         goBalancingWalk(0);
         rotation = leftMotor->getCount();
         measure->measure();
@@ -127,13 +125,13 @@ void StairScenario::run() {
       break;
 
     case GOTOSTAIR2:
-      if(inTime(0, 5000)) {
-        goBalancingWalk(30);
-      } 
-      if(inTime(5000  , 100000000)) {
+      if(inTime(0, 1000)) {
+        goBalancingWalk(50);
+      }
+      if(inTime(1000  , 100000000)) {
         goBalancingWalk(10);
         // 段差検知
-        if (fabs(gyroSensor->getAnglerVelocity()) > 150.0) {
+        if (fabs(gyroSensor->getAnglerVelocity()) > THRESHOLD) {
           ev3_speaker_play_tone(100, 100);
           measure->measure();
           measure->distance_reset();
@@ -147,7 +145,6 @@ void StairScenario::run() {
       measure->measure();
       if((measure->point_x) < - 10.0) {
         ev3_speaker_play_tone(400,100);
-        rotation = leftMotor->getCount();
         nextState();
       }
       break;
@@ -155,14 +152,19 @@ void StairScenario::run() {
     case SPIN1:
       if(inTime(0  , 1000)) {
         goStraight(5);
-        tailController->rotate(75, 50, false);
+        tailController->rotate(75, 50, true);
       }
-      if(inTime(1000  , 1000000000)) {
+      if(inTime(1000  , 2000)) {
+        goStraight(-5);
+        tailController->rotate(75, 50, true);
+        rotation = leftMotor->getCount();
+      }
+      if(inTime(2000  , 1000000000)) {
         leftMotor->setPWM(10);
         rightMotor->setPWM(-10);
-        int color = courceMonitor->getCurrentColor();
-        if(leftMotor->getCount() - rotation >= 800 && color < 20) {
+        if(leftMotor->getCount() - rotation >= 750) {
           ev3_speaker_play_tone(800,100);
+          balancingWalker->resetWheel();
           goStraight(0);
           nextState();
         }
@@ -171,37 +173,35 @@ void StairScenario::run() {
 
     case STANDUP:
         // tailController->standUpBody(80);
-        tailController->rotate(79, 10, false);
+        tailController->rotate(79, 10, true);
         ev3_speaker_play_tone(400,100);
-        clock->wait(1000);
-        tailController->rotate(80, 10, false);
-        clock->wait(1000);
-        tailController->rotate(83, 10, false);
-        clock->wait(1000);
-        tailController->rotate(85, 10, false);
-        clock->wait(1000);
-        tailController->rotate(87, 10, false);
-        clock->wait(1000);
-        tailController->rotate(89, 10, false);
-        clock->wait(1000);
-        tailController->rotate(91, 10, false);
-        clock->wait(1000);
-        tailController->rotate(93, 100, false);
+        clock->wait(800);
+        tailController->rotate(80, 10, true);
+        clock->wait(800);
+        tailController->rotate(83, 10, true);
+        clock->wait(800);
+        tailController->rotate(85, 10, true);
+        clock->wait(800);
+        tailController->rotate(87, 10, true);
+        clock->wait(800);
+        tailController->rotate(89, 10, true);
+        goStraight(5);
+        clock->wait(400);
+        tailController->rotate(93, 10, true);
         ev3_speaker_play_tone(900,100);
-        clock->wait(100);
-        goBalancingWalk(0);
         nextState();
         break;
 
     case GOTOSTAIR3:
-      if(inTime(0, 3000)) {
-        goBalancingWalk(0);
+      if(inTime(0, 1000)) {
         tailController->rotate(0,50,false);
+        goBalancingWalk(0);
       }
-      if(inTime(3000  , 100000000)) {
-        goBalancingWalk(30);
+      if(inTime(100  , 100000000)) {
+        tailController->rotate(0,50,false);
+        goBalancingWalk(20);
         // 段差検知
-        if (fabs(gyroSensor->getAnglerVelocity()) > 140.0) {
+        if (fabs(gyroSensor->getAnglerVelocity()) > THRESHOLD) {
           ev3_speaker_play_tone(600, 100);
           measure->measure();
           measure->distance_reset();
@@ -210,29 +210,15 @@ void StairScenario::run() {
       } 
       break;
 
-    // case BACK3:
-    //   if(inTime(0, 1000000000)) {
-    //     goBalancingWalk(-40);
-    //     measure->measure();
-    //     if((measure->point_x) < - 10.0) {
-    //       ev3_speaker_play_tone(400,100);
-    //       measure->measure();
-    //       measure->distance_reset();
-    //       nextState();
-    //     }
-    //   } 
-    //   break;
-
     case STEP2:
       if(inTime(0  , 100000000)) {
         tailController->rotate(0, 80, false);
-        goBalancingWalk(30);
+        goBalancingWalk(80);
         measure->measure();
-        if(measure->point_x > 6.0) {
+        if(measure->point_x > 4.0) {
           ev3_speaker_play_tone(400, 100);
           measure->measure();
           measure->distance_reset();
-          rotation = leftMotor->getCount();
           goBalancingWalk(0);
           nextState();
         }
@@ -243,17 +229,19 @@ void StairScenario::run() {
       if(inTime(0, 3000)) {
         goBalancingWalk(0);
       }
-      if(inTime(0, 2000)) {
+      if(inTime(3000, 5000)) {
         goStraight(5);
-      }
-      if(inTime(5000, 10000)) {
         tailController->rotate(75, 80, false);
       }
+      if(inTime(5000, 10000)) {
+        goStraight(0);
+        tailController->rotate(75, 80, false);
+        rotation = leftMotor->getCount();
+      }
       if(inTime(10000,10000000)) {
-        leftMotor->setPWM(20);
-        rightMotor->setPWM(-20);
-        int color = courceMonitor->getCurrentColor();
-        if(leftMotor->getCount() - rotation >= 800 && color < 20) {
+        leftMotor->setPWM(10);
+        rightMotor->setPWM(-10);
+        if(leftMotor->getCount() - rotation >= 1200) {
           nextState();
         }
       }

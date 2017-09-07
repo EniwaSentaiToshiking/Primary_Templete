@@ -19,7 +19,7 @@ class StairScenario {
   enum StairScenarioState{
     PREPARE = 0,
     GOTOSTAIR,
-    BACK,
+    // BACK,
     STEP1,
     GOTOSTAIR2,
     BACK2,
@@ -51,6 +51,8 @@ private:
   StairScenarioState stairState;
   int rotation;
   int time;
+
+  double THRESHOLD = 120;
 
   Logger *log;
 public:

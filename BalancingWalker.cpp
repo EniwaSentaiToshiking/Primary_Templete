@@ -40,6 +40,54 @@ void BalancingWalker::run()
   rightMotor->setPWM(balancer->getPwmRight());
 }
 
+void BalancingWalker::linearRun()
+{
+  int16_t angle = gyroSensor->getAnglerVelocity();
+  int rightMotorEnc = rightMotor->getCount();
+  int leftMotorEnc = leftMotor->getCount();
+
+  balancer->setCommand(this->forward, this->turn, this->offset);
+
+  int battery = ev3_battery_voltage_mV();
+  balancer->update(angle, rightMotorEnc, leftMotorEnc, battery);
+
+  int comp = (rightMotorEnc - leftMotorEnc);
+  int leftPWM  = balancer->getPwmLeft();
+  int rightPWM = balancer->getPwmRight();
+
+  if (comp < 0) {
+    leftPWM += comp;
+  } else {
+    rightPWM -= comp;
+  }
+
+  leftMotor->setPWM(leftPWM);
+  rightMotor->setPWM(rightPWM);
+}
+
+void BalancingWalker::spinRun()
+{
+  int16_t angle = gyroSensor->getAnglerVelocity();
+  int rightMotorEnc = rightMotor->getCount();
+  int leftMotorEnc = leftMotor->getCount();
+
+  balancer->setCommand(this->forward, this->turn, this->offset);
+
+  int battery = ev3_battery_voltage_mV();
+  balancer->update(angle, rightMotorEnc, leftMotorEnc, battery);
+
+  int leftPWM  = balancer->getPwmLeft();
+  int rightPWM = balancer->getPwmRight();
+
+  leftMotor->setPWM(leftPWM);
+  rightMotor->setPWM(-rightPWM);
+}
+void BalancingWalker::resetWheel()
+{
+  leftMotor->reset();
+  rightMotor->reset();
+}
+
 void BalancingWalker::init()
 {
   int offset = gyroSensor->getAnglerVelocity();
