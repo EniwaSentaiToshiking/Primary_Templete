@@ -126,8 +126,14 @@ void RunManager::execScenarioTracing()
 {
     if (lookupMethod->run())
     {
-        tailWalker->lineTrace(getCourceColor(), 23);
+        int color = getCourceColor();
+        tailWalker->lineTrace(color, 21);
+        if(courceMonitor->isGrayLine(color)){
+            ev3_speaker_play_tone(880, 100);
+            run_state = GARAGE_IN;
+        }
     }
+
 }
 
 void RunManager::execGarageIn()

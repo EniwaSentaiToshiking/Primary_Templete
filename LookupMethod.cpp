@@ -40,7 +40,7 @@ bool LookupMethod::run()
         break;
 
     case SECOND_PASS_GATE:
-        tailController->standUpBody(93);
+        tailController->standUpBody(90);
         tailWalker->leftTurn(183);
         while (!isGate(10))
         {
@@ -52,7 +52,7 @@ bool LookupMethod::run()
         state = THIRD_PASS_GATE;
 
     case THIRD_PASS_GATE:
-        tailController->standUpBody(93);
+        tailController->standUpBody(90);
         tailWalker->leftTurn(183);
         while (!isGate(10))
         {

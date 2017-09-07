@@ -1,8 +1,11 @@
 #ifndef COURCEMONITOR_H
 #define COURCEMONITOR_H
-#define buffersize 10
 
 #include "ColorSensor.h"
+
+#define buffersize 10
+#define gray_buffer_max 250
+#define gray_limit 4
 
 using namespace ev3api;
 
@@ -16,6 +19,10 @@ class CourceMonitor
     int bufferSubscript;
     int bandMax, bandMin;
 
+    int gray_buffer[250] = {};
+    int gray_buffer_num = 0;
+    int gray_count = 0;
+
     ColorSensor *colorSensor;
 
   public:
@@ -26,6 +33,7 @@ class CourceMonitor
     int getTargetColor();
     void setColor(char color_initial);
     void setTargetColor();
+    bool isGrayLine(int current_color);
     int getColor(char color_initial);
     void detectCorrectStartPosition();
     bool isSetColor(char color_initial);
