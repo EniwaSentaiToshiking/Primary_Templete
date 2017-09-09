@@ -16,19 +16,18 @@
 using namespace ev3api;
 
 class StairScenario {
-  enum StairScenarioState{
-    PREPARE = 0,
-    GOTOSTAIR,
-    // BACK,
+  // 上から順番に処理をswitchで行う
+  enum StairScenarioState {
+    DETECT1_1 = 0,
     STEP1,
-    GOTOSTAIR2,
-    BACK2,
+    DETECT1_2,
+    BACK1,
     SPIN1,
-    STANDUP,
-    GOTOSTAIR3,
-    // BACK3,
+    DETECT2,
     STEP2,
     SPIN2,
+    SPIN_HALF,
+    STEP3,
     END
   };
 
@@ -43,16 +42,30 @@ private:
   GyroSensor* gyroSensor; 
   Measure* measure;
   
+  // 次の状態に遷移
   void nextState();
+  // PWM
   void goStraight(int);
+  // ライントレース
   void goLineTrace(int);
+  // 倒立振子運動
   void goBalancingWalk(int);
+  // 尻尾運動
+  void goTailWalk(int,int);
+  // 尻尾持ち上げ
+  void tailUp();
+  // 位置推定初期化
+  void measureReset();
+  // 検知
+  bool isDetectedStep();
+  void spin(int);
   bool inTime(int, int);
   StairScenarioState stairState;
-  int rotation;
+  int encodeOffset;
   int time;
 
-  double THRESHOLD = 100;
+  double THRESHOLD = 60;
+  int MAX = 1000000; //大きな数字（番兵）
 
   Logger *log;
 public:

@@ -10,9 +10,11 @@ StairScenario::StairScenario(BalancingWalker* bw, TailController* tc) {
   pidController = new PIDController();
   gyroSensor = new GyroSensor(PORT_4);
   measure = new Measure();
-  stairState = STANDUP;
   balancingWalker = bw;
   tailController = tc;
+
+  // 状態初期化
+  stairState = (StairScenarioState)0;
 
   log = new Logger("test.log");
 }
@@ -29,16 +31,37 @@ StairScenario::~StairScenario() {
   delete log;
 }
 
+// 次の状態に遷移＆タイム測定リセット＆自己位置推定リセット
 void StairScenario::nextState() {
   clock->reset();
   stairState = (StairScenarioState)(stairState + 1);
+  measureReset();
 }
 
+// 自己位置推定リセット
+void StairScenario::measureReset() {
+  measure->measure();
+  measure->distance_reset();
+}
+
+// 前に進む（P制御でエンコード調整）
 void StairScenario::goStraight(int pwm) {
-  leftMotor->setPWM(pwm);
-  rightMotor->setPWM(pwm);
+  int leftCount = leftMotor->getCount();
+  int rightCount= rightMotor->getCount();
+  int comp = leftCount - rightCount;
+  int leftPWM,rightPWM;
+  if(comp > 0) {
+    leftPWM = pwm - comp * 0.1;
+    rightPWM = pwm;
+  } else {
+    leftPWM = pwm;
+    rightPWM = pwm + comp * 0.1;
+  }
+  leftMotor->setPWM(leftPWM);
+  rightMotor->setPWM(rightPWM);
 }
 
+// ライントレース
 void StairScenario::goLineTrace(int speed) {
   int current_color = courceMonitor->getCurrentColor();
   int lowpassfiltering_color = courceMonitor->lowpassFilter(current_color);
@@ -60,213 +83,135 @@ void StairScenario::goLineTrace(int speed) {
   balancingWalker->run();
 }
 
+// 倒立振子運動
 void StairScenario::goBalancingWalk(int speed) {
   balancingWalker->setCommand(speed, 0, balancingWalker->getGyroOffset()); 
-  // balancingWalker->run();
   balancingWalker->linearRun();
 }
 
+void  StairScenario::goTailWalk(int speed, int angle) {
+  tailController->rotate(angle, 80, false);
+  goStraight(speed);
+}
+
+void StairScenario::tailUp() {
+  tailController->rotate(90, 10, false);
+  goStraight(20);
+}
+
+// time1ミリ秒からtime2ミリ秒の間にいるか
 bool StairScenario::inTime(int time1,int time2) {
   int time = clock->now();
   return (time > time1 && time < time2);
 }
 
+// ジャイロセンサから段差推定
+bool StairScenario::isDetectedStep() {
+  return fabs(gyroSensor->getAnglerVelocity()) > THRESHOLD;
+}
+
+// 回転
+void StairScenario::spin(int encodeOffset) {
+  leftMotor->setPWM(10);
+  rightMotor->setPWM(-10);
+  if(leftMotor->getCount() - encodeOffset >= 720) {
+    goStraight(0);
+    encodeOffset = leftMotor->getCount();
+    nextState();
+  }
+}
+
 void StairScenario::run() {
   log->logging(gyroSensor->getAnglerVelocity());
   switch(stairState) {
-    case PREPARE:
-      tailController->rotate(0, 100, false);
-      goBalancingWalk(0);
-      nextState();
-      break;
-      
-    case GOTOSTAIR:
-      if(inTime(0, 1000)) {
-        goBalancingWalk(0);
-      } 
-      if(inTime(1000  , 100000000)) {
-        goBalancingWalk(20);
-        // 段差検知
-        if (fabs(gyroSensor->getAnglerVelocity()) > THRESHOLD) {
-          ev3_speaker_play_tone(600, 100);
-          measure->measure();
-          measure->distance_reset();
-          nextState();
-        }
-      } 
-      break;
-
-    // case BACK:
-    //   if(inTime(0, 1000000000)) {
-    //     goBalancingWalk(-10);
-    //     measure->measure();
-    //     if((measure->point_x) < - 4.0) {
-    //       ev3_speaker_play_tone(400,100);
-    //       measure->measure();
-    //       measure->distance_reset();
-    //       nextState();
-    //     }
-    //   } 
-    //   break;
-
-    case STEP1:
-      tailController->rotate(0, 80, false);
-      if(inTime(0  , 200000000)) {
-        goBalancingWalk(70);
-      }
-      measure->measure();
-      if((measure->point_x) >  2.0) {
+    // 一段目段差検知
+    case DETECT1_1:
+      goTailWalk(20, 70);
+      if (isDetectedStep()) {
         ev3_speaker_play_tone(300, 100);
-        goBalancingWalk(0);
-        rotation = leftMotor->getCount();
-        measure->measure();
-        measure->distance_reset();
         nextState();
       }
       break;
 
-    case GOTOSTAIR2:
-      if(inTime(0, 1000)) {
-        goBalancingWalk(50);
+    // 登る
+    case STEP1:
+      if(inTime(0, 5000)) {
+        goTailWalk(0, 70);
       }
-      if(inTime(1000  , 100000000)) {
-        goBalancingWalk(10);
-        // 段差検知
-        if (fabs(gyroSensor->getAnglerVelocity()) > THRESHOLD) {
-          ev3_speaker_play_tone(100, 100);
-          measure->measure();
-          measure->distance_reset();
-          nextState();
-        }
-      } 
+      if(inTime(5000, 100000)) {
+        tailUp();
+      }
+      if(inTime(1000000, MAX)) {
+        nextState();
+      }
       break;
 
-    case BACK2:
-      goBalancingWalk(-30);
+    // 二段目段差検知
+    case DETECT1_2:
+      goTailWalk(10, 70);
+      if (isDetectedStep()) {
+        ev3_speaker_play_tone(300, 100);
+        nextState();
+      }
+      break;
+
+    // 回転のために戻る
+    case BACK1:
+      goTailWalk(-10,80);
       measure->measure();
       if((measure->point_x) < - 10.0) {
-        ev3_speaker_play_tone(400,100);
         nextState();
+        encodeOffset = leftMotor->getCount();
       }
       break;
 
+    // 一段目の回転
     case SPIN1:
-      if(inTime(0  , 1000)) {
-        goStraight(5);
-        tailController->rotate(75, 50, true);
-      }
-      if(inTime(1000  , 2000)) {
-        goStraight(-5);
-        tailController->rotate(75, 50, true);
-        rotation = leftMotor->getCount();
-      }
-      if(inTime(2000  , 1000000000)) {
-        leftMotor->setPWM(10);
-        rightMotor->setPWM(-10);
-        if(leftMotor->getCount() - rotation >= 720) {
-          ev3_speaker_play_tone(800,100);
-          balancingWalker->resetWheel();
-          goStraight(0);
-          nextState();
-        }
-      }
+      spin(encodeOffset);
       break;
 
-    case STANDUP:
-        // tailController->standUpBody(80);
-        tailController->rotate(79, 10, true);
-        ev3_speaker_play_tone(400,100);
-        clock->wait(800);
-        tailController->rotate(80, 10, true);
-        clock->wait(800);
-        tailController->rotate(83, 10, true);
-        clock->wait(800);
-        tailController->rotate(85, 10, true);
-        clock->wait(800);
-        tailController->rotate(87, 10, true);
-        clock->wait(800);
-        tailController->rotate(89, 10, true);
-        clock->wait(400);
-        tailController->rotate(100, 100, false);
-        ev3_speaker_play_tone(900,100);
+    // 二段目段差検知
+    case DETECT2:
+      goTailWalk(10, 70);
+      if (isDetectedStep()) {
+        ev3_speaker_play_tone(300, 100);
         nextState();
-        break;
-
-    case GOTOSTAIR3:
-      if(inTime(0, 3000)) {
-        tailController->rotate(0,100,false);
-        goBalancingWalk(20);
       }
-      if(inTime(3000, 6000)) {
-        tailController->rotate(0,100,false);
-        goBalancingWalk(0);
-      }
-      if(inTime(6000  , 100000000)) {
-        goBalancingWalk(20);
-        // 段差検知
-        if (fabs(gyroSensor->getAnglerVelocity()) > THRESHOLD) {
-          ev3_speaker_play_tone(600, 100);
-          measure->measure();
-          measure->distance_reset();
-          tailController->reset();
-          nextState();
-        }
-      } 
       break;
 
+    // 登る
     case STEP2:
-      if(inTime(0  , 100000000)) {
-        tailController->rotate(0, 80, false);
-        goBalancingWalk(70);
-        measure->measure();
-        if(measure->point_x > 5.0) {
-          ev3_speaker_play_tone(400, 100);
-          measure->measure();
-          measure->distance_reset();
-          nextState();
-        }
-      }
-      break;
-      
-    case SPIN2:
-      if(inTime(0, 3000)) {
-        tailController->rotate(0, 80, false);
-        goBalancingWalk(0);
-      }
-      if(inTime(3000, 4000)) {
-        goStraight(0);
-        tailController->rotate(75, 80, false);
-      }
-      if(inTime(4000, 6000)) {
-        goStraight(0);
-        rotation = leftMotor->getCount();
-      }
-      if(inTime(6000,10000000)) {
-        leftMotor->setPWM(10);
-        rightMotor->setPWM(-10);
-        if(leftMotor->getCount() - rotation >= 1200) {
-          nextState();
-        }
+      if(inTime(0, 2000)) {
+        tailUp();
+        encodeOffset = leftMotor->getCount();
       }
       break;
 
+    // 二段目の回転
+    case SPIN2:
+      spin(encodeOffset);
+
+    // 半回転
+    case SPIN_HALF:
+      leftMotor->setPWM(10);
+      rightMotor->setPWM(-10);
+      if(leftMotor->getCount() - encodeOffset >= 360) {
+        goStraight(0);
+        nextState();
+      }
+
+    // 段を降りる
+    case STEP3:
+      goTailWalk(20, 70);
+      if (isDetectedStep()) {
+        ev3_speaker_play_tone(300, 100);
+        nextState();
+      }
+      break;
+
+    // 終了
     case END:
-      tailController->rotate(79, 10, true);
-      ev3_speaker_play_tone(400,100);
-      clock->wait(800);
-      tailController->rotate(80, 10, true);
-      clock->wait(800);
-      tailController->rotate(83, 10, true);
-      clock->wait(800);
-      tailController->rotate(85, 10, true);
-      clock->wait(800);
-      tailController->rotate(87, 10, true);
-      clock->wait(800);
-      tailController->rotate(89, 10, true);
-      clock->wait(400);
-      tailController->rotate(130, 130, false);
-      ev3_speaker_play_tone(900,100);
-      nextState();
+      goTailWalk(0, 80);
       break;
   }
 }
