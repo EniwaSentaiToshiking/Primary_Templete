@@ -48,6 +48,7 @@ void TailController::bendBody(int target_angle)
 void TailController::reset()
 {
 	ev3_motor_reset_counts(PORT);
+	current_angle = 0;
 }
 
 int TailController::getCurrentAngle(){

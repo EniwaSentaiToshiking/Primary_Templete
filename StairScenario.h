@@ -52,7 +52,7 @@ private:
   int rotation;
   int time;
 
-  double THRESHOLD = 120;
+  double THRESHOLD = 100;
 
   Logger *log;
 public:
