@@ -14,7 +14,7 @@ class LotManager
     Measure *mea;
 
   public:
-    LotManager();
+    LotManager(int flag);
     virtual ~LotManager();
 
     int getCurrentLot();

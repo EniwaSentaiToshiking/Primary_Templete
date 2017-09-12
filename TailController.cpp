@@ -30,6 +30,7 @@ void TailController::standUpBody(int target_angle)
 	{
 		rotate(i, 10, true);
 		clock->sleep(4);
+		current_angle = i;
 	}
 	clock->sleep(1000);
 }
@@ -40,8 +41,8 @@ void TailController::bendBody(int target_angle)
 	{
 		rotate(i, 10, true);
 		clock->sleep(300);
+		current_angle = i;
 	}
-
 	clock->sleep(1000);
 }
 

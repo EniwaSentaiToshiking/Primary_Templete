@@ -15,6 +15,7 @@
 #include "LookupMethod.h"
 #include "TailWalker.h"
 #include "Garage.h"
+#include "StairScenario.h"
 
 using namespace ev3api;
 
@@ -31,7 +32,14 @@ private:
     GARAGE_IN
   };
 
+  enum CourseState 
+  {
+    R,
+    L
+  };
+
   State run_state;
+  const CourseState course_state = L;
 
   Clock *clock;
   TailController *tailController;
@@ -46,6 +54,7 @@ private:
   TouchController *touchController;
   TailWalker *tailWalker;
   Garage *garage;
+  StairScenario *stairScenario;
 
   void execUndefined();
   void execWaitingForStart();
@@ -55,6 +64,8 @@ private:
   void calibration();
   void displayToLCD(int color);
   int getCourceColor();
+  void grayChecker(int color);
+  bool isClearScenario(int color);
 
 public:
   RunManager();

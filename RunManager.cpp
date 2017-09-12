@@ -9,12 +9,14 @@ RunManager::RunManager()
     courceMonitor = new CourceMonitor();
     pidController = new PIDController();
     btTask = new BTTask();
-    lotManager = new LotManager();
+    if (course_state == R) lotManager = new LotManager(0);
+    else if (course_state == L) lotManager = new LotManager(1);
     ui = new UI();
     filteringColor_logger = new Logger("lowpassColor.txt");
     lookupMethod = new LookupMethod(balancingWalker, tailController);
     tailWalker = new TailWalker();
     garage = new Garage(tailController);
+    stairScenario = new StairScenario(tailController);
     run_state = UNDEFINED;
 }
 
@@ -73,7 +75,7 @@ void RunManager::execUndefined()
  **/
 void RunManager::execWaitingForStart()
 {
-    tailController->rotate(95, 80, true);
+    tailController->rotate(93, 80, true);
     if (touchController->isPressed() || btTask->isStart())
         run_state = LINE_TRACE;
     clock->sleep(10);
@@ -88,15 +90,17 @@ void RunManager::execLineTracing()
     tailController->rocketStart();
     tailController->rotate(0, 80, false);
 
-    if (lotManager->isChangeCurrentLot())
+    if (lotManager->isChangeCurrentLot()){
         lotManager->changeCurrentLot();
+        clock->reset();
+    }
 
     int current_color = getCourceColor();
     int target_color = courceMonitor->getTargetColor();
     int speed = lotManager->getCurrentLotSpeed();
     PID *pid = lotManager->getCurrentLotPID();
 
-    filteringColor_logger->logging(current_color);
+    //filteringColor_logger->logging(current_color);
 
     int turn = 0;
 
@@ -112,10 +116,21 @@ void RunManager::execLineTracing()
     balancingWalker->setCommand(speed, turn, 0);
     balancingWalker->run();
 
+
+    //ルックアップ
     if(lookupMethod->isGate(10))
     {
         run_state = SCENARIO_TRACE;
         clock->reset();
+    }
+
+    //階段
+    if (lotManager->getCurrentLot() == 7)
+    {
+        if (clock->now() > 1000)
+        {
+            run_state = SCENARIO_TRACE;
+        }
     }
 }
 
@@ -124,16 +139,10 @@ void RunManager::execLineTracing()
  */
 void RunManager::execScenarioTracing()
 {
-    if (lookupMethod->run())
-    {
-        int color = getCourceColor();
-        tailWalker->lineTrace(color, 21);
-        if(courceMonitor->isGrayLine(color)){
-            ev3_speaker_play_tone(880, 100);
-            run_state = GARAGE_IN;
-        }
-    }
+    int color = getCourceColor();
 
+    if (isClearScenario(color))
+        grayChecker(color);
 }
 
 void RunManager::execGarageIn()
@@ -147,8 +156,9 @@ void RunManager::calibration()
 
     while (count < 4)
     {
-        if(count == 3){
-            courceMonitor->detectCorrectStartPosition(); 
+        if (count == 3)
+        {
+            courceMonitor->detectCorrectStartPosition();
         }
 
         if (touchController->isPressed())
@@ -157,8 +167,8 @@ void RunManager::calibration()
             {
             case 0:
                 courceMonitor->setColor('b');
-                
-                if(courceMonitor->isSetColor('b'))
+
+                if (courceMonitor->isSetColor('b'))
                 {
                     displayToLCD(courceMonitor->getColor('b'));
                     count++;
@@ -166,8 +176,8 @@ void RunManager::calibration()
                 break;
             case 1:
                 courceMonitor->setColor('w');
-                
-                if(courceMonitor->isSetColor('w'))
+
+                if (courceMonitor->isSetColor('w'))
                 {
                     displayToLCD(courceMonitor->getColor('w'));
                     courceMonitor->setTargetColor();
@@ -197,14 +207,35 @@ bool RunManager::isTipOver()
     return balancingWalker->isTipOver();
 }
 
-void RunManager::displayToLCD(int color){
+void RunManager::displayToLCD(int color)
+{
     char color_string[256];
     sprintf(color_string, "%d", color);
     ui->lcdDraw(color_string);
 }
 
-int RunManager::getCourceColor(){
+int RunManager::getCourceColor()
+{
     int current_color = courceMonitor->getCurrentColor();
     int bandfiltering_color = courceMonitor->bandFilter(current_color);
     return bandfiltering_color;
+}
+
+void RunManager::grayChecker(int color)
+{
+    tailWalker->lineTrace(color, 21);
+    if(courceMonitor->isGrayLine(color)){
+        ev3_speaker_play_tone(880, 100);
+        run_state = GARAGE_IN;
+    }
+}
+
+bool RunManager::isClearScenario(int color)
+{
+    if(course_state == R)
+        return lookupMethod->run();
+    else if(course_state == L)
+        return stairScenario->run(color);
+
+    return false;
 }
