@@ -8,6 +8,7 @@
 using namespace ev3api;
 
 #define TURN_PWM 20
+#define BUFFER_SIZE 4
 
 class TailWalker
 {
@@ -16,6 +17,10 @@ class TailWalker
     Motor *rightMotor;
     Clock *clock;
     Measure *mea;
+    int right_buffer[BUFFER_SIZE];
+    int left_buffer[BUFFER_SIZE];
+    int left_buffer_count = 0;
+    int right_buffer_count = 0;
 
   public:
     TailWalker();
@@ -30,6 +35,9 @@ class TailWalker
     void lineTrace(int color, int target_color);
     void reset_distance();
     float getDistance();
+    bool get4msRightMotorCount();
+    bool get4msLeftMotorCount();
+    void bufferInit();
     virtual ~TailWalker();
 };
 

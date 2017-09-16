@@ -1,6 +1,6 @@
 #include "LotManager.h"
 
-LotManager::LotManager()
+LotManager::LotManager(int flag)
 {
     current_lot = 0;
 
@@ -9,7 +9,6 @@ LotManager::LotManager()
      *  @arg (x0, x1, y0, y1, speed, p, i, d)
      *  @con x0 < x1, y0 < y1
      */
-    int flag = 0;
 
     if(flag==0){
         courseR();

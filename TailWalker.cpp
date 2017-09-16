@@ -39,8 +39,9 @@ void TailWalker::backward(int pwm, float distance)
 
     while (beginDistance - mea->getCurrentDistance() <= float(distance))
     {
-        leftMotor->setPWM(pwm);
-        rightMotor->setPWM(pwm);
+        leftMotor->setPWM(pwm * -1);
+        rightMotor->setPWM(pwm * -1);
+        mea->measure();
     }
     stop();
 }
@@ -115,4 +116,63 @@ float TailWalker::getDistance()
 {
     mea->measure();
     return mea->getCurrentDistance();
+}
+
+bool TailWalker::get4msRightMotorCount()
+{
+    static int prevRightMotorCount = 0;
+    int currentRightMotorCount = rightMotor->getCount();
+    int result = currentRightMotorCount - prevRightMotorCount;
+    prevRightMotorCount = currentRightMotorCount;
+
+    if (result == 0) right_buffer[right_buffer_count++] = 0;
+    else right_buffer[right_buffer_count++] = 1;
+
+    if(right_buffer_count == BUFFER_SIZE) right_buffer_count = 0;
+    
+        for(int i = 0; i < BUFFER_SIZE; i++)
+        {
+            if(right_buffer[i] == 1)
+            {
+                return false;
+            }
+        }
+    
+        return true;
+}
+
+bool TailWalker::get4msLeftMotorCount()
+{
+    static int prevLeftMotorCount = 0;
+    
+    int currentLeftMotorCount = leftMotor->getCount();
+    int result = currentLeftMotorCount - prevLeftMotorCount;
+    prevLeftMotorCount = currentLeftMotorCount;
+
+    if (result == 0) left_buffer[left_buffer_count++] = 0;
+    else left_buffer[left_buffer_count++] = 1;
+
+    if(left_buffer_count == BUFFER_SIZE) left_buffer_count = 0;
+
+    for(int i = 0; i < BUFFER_SIZE; i++)
+    {
+        if(left_buffer[i] == 1)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void TailWalker::bufferInit()
+{
+    for (int i = 0; i < BUFFER_SIZE; i++)
+    {
+        right_buffer[i] = 1;
+        left_buffer[i] = 1;
+    }
+
+    right_buffer_count = 0;
+    left_buffer_count = 0;
 }

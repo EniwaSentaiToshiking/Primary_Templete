@@ -19,6 +19,7 @@ Logger.o \
 LookupMethod.o \
 TailWalker.o \
 Garage.o \
+StairScenario.o \
 
 SRCLANG := c++
 
