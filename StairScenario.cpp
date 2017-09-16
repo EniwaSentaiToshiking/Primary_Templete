@@ -133,7 +133,7 @@ bool StairScenario::run(int color)
     case STEP3:
         tailController->rotate(90, 30, false);
         tailWalker->lineTrace(color, 15);
-        if (color <= 8)
+        if (color <= 6)
         {
             tailWalker->stop();
             state = STEP4;

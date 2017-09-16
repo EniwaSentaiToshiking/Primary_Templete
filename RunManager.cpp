@@ -229,7 +229,7 @@ void RunManager::grayChecker(int color)
 {
     if(course_state == R)
     {
-        tailWalker->lineTrace(color, 17);
+        tailWalker->lineTrace(color, 19);
     }
     else 
     {
