@@ -38,6 +38,7 @@ class TailWalker
     bool get4msRightMotorCount();
     bool get4msLeftMotorCount();
     void bufferInit();
+    void garageLineTrace(int color, int target_color);
     virtual ~TailWalker();
 };
 
