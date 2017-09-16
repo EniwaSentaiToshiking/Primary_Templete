@@ -117,21 +117,25 @@ void RunManager::execLineTracing()
     balancingWalker->run();
 
 
-    //ルックアップ
-    if(lookupMethod->isGate(10))
-    {
-        run_state = SCENARIO_TRACE;
-        clock->reset();
-    }
-
-    //階段
-    if (lotManager->getCurrentLot() == 7)
-    {
-        if (clock->now() > 1000)
+    if (course_state == R)
         {
-            run_state = SCENARIO_TRACE;
+            if (lookupMethod->isGate(10))
+            {
+                run_state = SCENARIO_TRACE;
+                clock->reset();
+            }
         }
-    }
+
+        if (course_state == L)
+        {
+            if (lotManager->getCurrentLot() == 7)
+            {
+                if (clock->now() > 1000)
+                {
+                    run_state = SCENARIO_TRACE;
+                }
+            }
+        }
 }
 
 /**
@@ -223,7 +227,7 @@ int RunManager::getCourceColor()
 
 void RunManager::grayChecker(int color)
 {
-    tailWalker->lineTrace(color, 21);
+    tailWalker->lineTrace(color, 17);
     if(courceMonitor->isGrayLine(color)){
         ev3_speaker_play_tone(880, 100);
         run_state = GARAGE_IN;
