@@ -227,7 +227,15 @@ int RunManager::getCourceColor()
 
 void RunManager::grayChecker(int color)
 {
-    tailWalker->lineTrace(color, 17);
+    if(course_state == R)
+    {
+        tailWalker->lineTrace(color, 17);
+    }
+    else 
+    {
+        tailWalker->garageLineTrace(color, 17);
+    }
+    
     if(courceMonitor->isGrayLine(color)){
         ev3_speaker_play_tone(880, 100);
         run_state = GARAGE_IN;

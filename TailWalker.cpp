@@ -107,6 +107,20 @@ void TailWalker::lineTrace(int color, int target_color)
     }
 }
 
+void TailWalker::garageLineTrace(int color, int target_color)
+{
+    if (color >= target_color)
+    {
+        rightMotor->setPWM(10);
+        leftMotor->setPWM(14);
+    }
+    else
+    {
+        rightMotor->setPWM(14);
+        leftMotor->setPWM(10);
+    }
+}
+
 void TailWalker::reset_distance()
 {
     mea->distance_reset();
