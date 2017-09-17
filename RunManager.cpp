@@ -151,7 +151,13 @@ void RunManager::execScenarioTracing()
 
 void RunManager::execGarageIn()
 {
-    garage->run(getCourceColor());
+    if(course_state == R)
+    {
+        garage->run(getCourceColor(), 20);
+    }else 
+    {
+        garage->run(getCourceColor(), 20);
+    }
 }
 
 void RunManager::calibration()

@@ -34,7 +34,7 @@ bool StairScenario::run(int color)
     // 一段目段差検知
     case DETECT1:
         tailController->rotate(tailController->getCurrentAngle(), 50, false);
-        tailWalker->lineTrace(color, 15);
+        tailWalker->lineTrace(color, 17);
         if (clock->now() > 1000)
         {
             if (detectStair())
@@ -133,7 +133,7 @@ bool StairScenario::run(int color)
     case STEP3:
         tailController->rotate(90, 30, false);
         tailWalker->lineTrace(color, 15);
-        if (color <= 6)
+        if (color <= 8)
         {
             tailWalker->stop();
             state = STEP4;
