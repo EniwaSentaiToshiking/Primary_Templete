@@ -39,7 +39,7 @@ private:
   };
 
   State run_state;
-  const CourseState course_state = L;
+  const CourseState course_state = R;
 
   Clock *clock;
   TailController *tailController;

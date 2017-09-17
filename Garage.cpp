@@ -10,7 +10,7 @@ Garage::~Garage()
 {
 }
 
-void Garage::run(int color)
+void Garage::run(int color, int distance)
 {
 
 	static State state = GARAGE_IN;
@@ -20,7 +20,7 @@ void Garage::run(int color)
 	{
 	case GARAGE_IN:
 
-		if (tailWalker->getDistance() - beginDistance <= 23)
+		if (tailWalker->getDistance() - beginDistance <= distance)
 		{
 			tailController->rotate(tailController->getCurrentAngle(), 50, false);
 			tailWalker->lineTrace(color, 23);

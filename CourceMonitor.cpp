@@ -65,13 +65,13 @@ void CourceMonitor::setColor(char color_initial)
     case 'b':
         if(color < 10)
         {
-            black = color;
+            black = 3;
         }
         break;
     case 'w':
         if(color > 30)
         {
-            white = color;
+            white = 47;
         }
         break;
     case 'g':

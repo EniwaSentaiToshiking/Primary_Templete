@@ -22,7 +22,7 @@ class Garage
 
   public:
 	Garage(TailController *tailController);
-	void run(int color);
+	void run(int color, int distance);
 	virtual ~Garage();
 };
 
